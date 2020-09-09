@@ -1,22 +1,22 @@
 ﻿{% extends "base.html" %}
 {% block contents %}
 <script type-'text/javascript'>
-		var temp=0
-		function DrawProgress() {
+	var temp=0
+	function DrawProgress() {
 	    temp+=10
 
 	    var prog = document.getElementById('prog')
 	    prog.value=temp
 	    if (temp>=100) {
-	    	document.getElementById('memo').innerHTML='Complete'
-	    	window.location.href='/user/logout'
+	    	document.getElementById('memo').innerHTML='Reboot'
+	    	window.location.href='/user/shutdown'
 	    }
 	    else {
-	    	document.getElementById('memo').innerHTML='Waiting restart'
+	    	document.getElementById('memo').innerHTML='Wait moment'
+	    	setTimeout("DrawProgress()",1000);
 	    }
-
-	    setTimeout("DrawProgress()",1000);
-		}
+		    
+	}
     window.onload=function() {
 		  DrawProgress();
     }
@@ -30,7 +30,7 @@
 		<progress id='prog' max="100"></progress>
   </div>
   <div class = "col-12 text-center">
-		<span id='memo'></span>
+		<h1><span id='memo'></span></h1>
 	</div>
 	<div>
   

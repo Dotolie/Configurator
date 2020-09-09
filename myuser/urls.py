@@ -9,5 +9,6 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'  ),
     path('save/', views.save, name='save' ),
     path('restart/', views.restart, name='restart' ),
+    path('shutdown/', views.shutdown, name='shutdown' ),
 
 ]

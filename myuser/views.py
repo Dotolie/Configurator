@@ -4,6 +4,9 @@ from django.http import HttpResponse
 
 from configparser import ConfigParser
 import subprocess 
+import time
+import threading
+
 from django.contrib.auth import login as dlogin, logout as dlogout, authenticate
 
 # Create your views here.
@@ -632,10 +635,23 @@ def restart(request):
     response_data = {}
 
     if request.user.is_authenticated:
-        run = subprocess.check_output('./compose.sh')
-        print('run=',run)
         response_data['username'] = request.user.username
+        run = subprocess.check_output('sync')
         return render(request, 'restart.html', response_data)
         
     return redirect('/user/login')
 
+def thdown():
+    run = subprocess.check_output('reboot')
+    
+def shutdown(request):
+
+    if request.user.is_authenticated:
+        dlogout(request)
+        t = threading.Thread(target=thdown)
+        t.start()
+        return HttpResponse("<h1>Rebooting ...</h1>")    
+
+    return redirect('/user/login')
+
+    
