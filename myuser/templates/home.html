@@ -1,0 +1,1106 @@
+{% extends "base.html" %}
+{% block contents %}
+<div class = "col-12 text-center">
+		<h1>Configuration</h1>
+</div>
+
+
+<form method = "POST" action="{% url 'user:save' %}" >
+{% csrf_token %}
+<span style="color:red;"><strong>{{ error }}</strong> </span>
+<table class="table" style="width:100%" border="0px">
+  <thead>
+  	<tr class="thead-dark" align="center">
+      <th>Group</th>
+      <th>Items</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  	
+  <tbody>
+		<tr>
+			<td rowspan="8" align="center" style="vertical-align:middle">COMMON</td>
+			<td align="center" style="vertical-align:middle">FTP ADDRESS</td>		
+			<td>
+		        <input type="text" 
+		        class="form-control" 
+		        name = "ftpaddress" 
+		        value ={{ftpaddress}}
+		        id="ftpaddress" 
+		        placeholder="input ftp address">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">FTP PORT</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ftpport" 
+		        value ={{ftpport}}
+		        id="ftpport" 
+		        placeholder="input ftp port">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">Sample Rate</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "samplerate" 
+		        value ={{samplerate}}
+        		id="samplerate" 
+		        placeholder="input sample rate">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">Signal Type [1=vib, 2=analog]</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "signaltype" 
+		         value ={{signaltype}}
+		        id="signaltype" 
+		        placeholder="input signal type">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">cutoff</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "cutoff" 
+		         value ={{cutoff}}
+		        id="cutoff" 
+		        placeholder="input cutoff freq">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">use filter</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "usefilter" 
+		         value ={{usefilter}}
+		        id="usefilter" 
+		        placeholder="input use filter">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">window</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "window" 
+		         value ={{window}}
+		        id="window" 
+		        placeholder="input window">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">taps</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "taps" 
+		         value ={{taps}}
+		        id="taps" 
+		        placeholder="input taps">
+		  </td>
+		</tr>
+
+		<tr>
+			<td rowspan="5" align="center" style="vertical-align:middle">CHANNEL</td>
+			<td align="center" style="vertical-align:middle">CH count [4=vib, 16=analog]</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch_count" 
+		        value ={{ch_count}}
+        		id="ch_count" 
+		        placeholder="input 0~4">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">CH0</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "CH0" 
+		        value ={{ch0}}
+		        id="ch0" 
+		        placeholder="input 4/16">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">CH1</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch1" 
+		        value ={{ch1}}
+		        id="ch1" 
+		        placeholder="input 0/1">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">CH2</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch2" 
+		         value ={{ch2}}
+		        id="ch2" 
+		        placeholder="input 0/1">
+		  </td>
+		<tr>
+			<td align="center" style="vertical-align:middle">CH3</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch3" 
+		         value ={{ch3}}
+		        id="ch3" 
+		        placeholder="input 0/1">
+		  </td>
+		</tr>
+		<tr>
+			<td rowspan="49" align="center" style="vertical-align:middle">DATA</td>
+			<td align="center" style="vertical-align:middle">bUsedOpposite</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "busedopposite" 
+		        value ={{busedopposite}}
+        		id="busedopposite" 
+		        placeholder="NA">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch0_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch0_gravity_calc" 
+		        value ={{ch0_gravity_calc}}
+        		id="ch0_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch0_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch0_gravity_base" 
+		        value ={{ch0_gravity_base}}
+        		id="ch0_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch0_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch0_const_current" 
+		        value ={{ch0_const_current}}
+        		id="ch0_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>		
+		<tr>
+			<td align="center" style="vertical-align:middle">ch1_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch1_gravity_calc" 
+		        value ={{ch1_gravity_calc}}
+        		id="ch1_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch1_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch1_gravity_base" 
+		        value ={{ch1_gravity_base}}
+        		id="ch1_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch1_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch1_const_current" 
+		        value ={{ch1_const_current}}
+        		id="ch1_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>		
+		<tr>
+			<td align="center" style="vertical-align:middle">ch2_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch2_gravity_calc" 
+		        value ={{ch2_gravity_calc}}
+        		id="ch2_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch2_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch2_gravity_base" 
+		        value ={{ch2_gravity_base}}
+        		id="ch2_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch2_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch2_const_current" 
+		        value ={{ch2_const_current}}
+        		id="ch2_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>	
+		<tr>
+			<td align="center" style="vertical-align:middle">ch3_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch3_gravity_calc" 
+		        value ={{ch3_gravity_calc}}
+        		id="ch3_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch3_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch3_gravity_base" 
+		        value ={{ch3_gravity_base}}
+        		id="ch3_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch3_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch3_const_current" 
+		        value ={{ch3_const_current}}
+        		id="ch3_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>	
+		<tr>
+			<td align="center" style="vertical-align:middle">ch4_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch4_gravity_calc" 
+		        value ={{ch4_gravity_calc}}
+        		id="ch4_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch4_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch4_gravity_base" 
+		        value ={{ch4_gravity_base}}
+        		id="ch4_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch4_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch4_const_current" 
+		        value ={{ch4_const_current}}
+        		id="ch4_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">ch5_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch5_gravity_calc" 
+		        value ={{ch5_gravity_calc}}
+        		id="ch5_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch5_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch5_gravity_base" 
+		        value ={{ch5_gravity_base}}
+        		id="ch5_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch5_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch5_const_current" 
+		        value ={{ch5_const_current}}
+        		id="ch5_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>		
+		<tr>
+			<td align="center" style="vertical-align:middle">ch6_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch6_gravity_calc" 
+		        value ={{ch6_gravity_calc}}
+        		id="ch6_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch6_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch6_gravity_base" 
+		        value ={{ch6_gravity_base}}
+        		id="ch6_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch6_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch6_const_current" 
+		        value ={{ch6_const_current}}
+        		id="ch6_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">ch7_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch7_gravity_calc" 
+		        value ={{ch7_gravity_calc}}
+        		id="ch7_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch7_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch7_gravity_base" 
+		        value ={{ch7_gravity_base}}
+        		id="ch7_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch7_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch7_const_current" 
+		        value ={{ch7_const_current}}
+        		id="ch7_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">ch8_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch8_gravity_calc" 
+		        value ={{ch8_gravity_calc}}
+        		id="ch8_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch8_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch8_gravity_base" 
+		        value ={{ch8_gravity_base}}
+        		id="ch8_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch8_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch8_const_current" 
+		        value ={{ch8_const_current}}
+        		id="ch8_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">ch9_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch9_gravity_calc" 
+		        value ={{ch9_gravity_calc}}
+        		id="ch9_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch9_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch9_gravity_base" 
+		        value ={{ch9_gravity_base}}
+        		id="ch9_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch9_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch9_const_current" 
+		        value ={{ch9_const_current}}
+        		id="ch9_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+		
+
+		<tr>
+			<td align="center" style="vertical-align:middle">ch10_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch10_gravity_calc" 
+		        value ={{ch10_gravity_calc}}
+        		id="ch10_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch10_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch10_gravity_base" 
+		        value ={{ch10_gravity_base}}
+        		id="ch10_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch10_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch10_const_current" 
+		        value ={{ch10_const_current}}
+        		id="ch10_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">ch11_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch11_gravity_calc" 
+		        value ={{ch11_gravity_calc}}
+        		id="ch11_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch11_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch11_gravity_base" 
+		        value ={{ch11_gravity_base}}
+        		id="ch11_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch11_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch11_const_current" 
+		        value ={{ch11_const_current}}
+        		id="ch11_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">ch12_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch12_gravity_calc" 
+		        value ={{ch12_gravity_calc}}
+        		id="ch12_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch12_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch12_gravity_base" 
+		        value ={{ch12_gravity_base}}
+        		id="ch12_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch12_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch12_const_current" 
+		        value ={{ch12_const_current}}
+        		id="ch12_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">ch13_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch13_gravity_calc" 
+		        value ={{ch13_gravity_calc}}
+        		id="ch13_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch13_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch13_gravity_base" 
+		        value ={{ch13_gravity_base}}
+        		id="ch13_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch13_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch13_const_current" 
+		        value ={{ch13_const_current}}
+        		id="ch13_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">ch14_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch14_gravity_calc" 
+		        value ={{ch14_gravity_calc}}
+        		id="ch14_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch14_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch14_gravity_base" 
+		        value ={{ch14_gravity_base}}
+        		id="ch14_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch14_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch14_const_current" 
+		        value ={{ch14_const_current}}
+        		id="ch14_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">ch15_Gravity_Calc</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch15_gravity_calc" 
+		        value ={{ch15_gravity_calc}}
+        		id="ch15_gravity_calc" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch15_Gravity_Base</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch15_gravity_base" 
+		        value ={{ch15_gravity_base}}
+        		id="ch15_gravity_base" 
+		        placeholder="input value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">ch15_Const_Current</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ch15_const_current" 
+		        value ={{ch15_const_current}}
+        		id="ch15_const_current" 
+		        placeholder="input value">
+		  </td>
+		</tr>			
+
+		<tr>
+			<td rowspan="34" align="center" style="vertical-align:middle">VIB_Setting</td>
+			<td align="center" style="vertical-align:middle">EQPID</td>		
+			<td>
+		        <input type="text" 
+		        class="form-control" 
+		        name = "eqpid" 
+		        value ={{eqpid}}
+        		id="eqpid" 
+		        placeholder="input id value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">CHID</td>		
+			<td>
+		        <input type="text" 
+		        class="form-control" 
+		        name = "chid" 
+		        value ={{chid}}
+        		id="chid" 
+		        placeholder="input id value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">Debug_Mode_Enable</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "debug_mode_enable" 
+		        value ={{debug_mode_enable}}
+        		id="debug_mode_enable" 
+		        placeholder="input mode value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">FTP_Log_Raw_Enable</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ftp_log_raw_enable" 
+		        value ={{ftp_log_raw_enable}}
+        		id="ftp_log_raw_enable" 
+		        placeholder="input raw value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">FTP_Log_Feat_Enable</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ftp_log_feat_enable" 
+		        value ={{ftp_log_feat_enable}}
+        		id="ftp_log_feat_enable" 
+		        placeholder="input feat value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">FTP_Log_Buffer</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ftp_log_buffer" 
+		        value ={{ftp_log_buffer}}
+        		id="ftp_log_buffer" 
+		        placeholder="input buffer value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">FTP_Log_Split</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ftp_log_split" 
+		        value ={{ftp_log_split}}
+        		id="ftp_log_split" 
+		        placeholder="input split value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">Sample_N</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "sample_n" 
+		        value ={{sample_n}}
+        		id="sample_n" 
+		        placeholder="input sample_n value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">IoT_Send_Interval</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "iot_send_interval" 
+		        value ={{iot_send_interval}}
+        		id="iot_send_interval" 
+		        placeholder="input inteval value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">Feat_T_Set</td>		
+			<td>
+		        <input type="text" 
+		        class="form-control" 
+		        name = "feat_t_set" 
+		        value ={{feat_t_set}}
+		        id="feat_t_set" 
+		        placeholder="input feat_t_set 11111111">
+		  </td>
+		  </td>
+		</tr>		
+		<tr>
+			<td align="center" style="vertical-align:middle">Feat_F_Set</td>		
+			<td>
+		        <input type="text" 
+		        class="form-control" 
+		        name = "feat_f_set" 
+		        value ={{feat_f_set}}
+        		id="feat_f_set" 
+		        placeholder="input feat_f_set 1111111444">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">FFeat_T_Set</td>		
+			<td>
+		        <input type="text" 
+		        class="form-control" 
+		        name = "ffeat_t_set" 
+		        value ={{ffeat_t_set}}
+		        id="ffeat_t_set" 
+		        placeholder="input ffeat_t_set 11111111">
+		  </td>
+		  </td>
+		</tr>		
+		<tr>
+			<td align="center" style="vertical-align:middle">FFeat_F_Set</td>		
+			<td>
+		        <input type="text" 
+		        class="form-control" 
+		        name = "ffeat_f_set" 
+		        value ={{ffeat_f_set}}
+        		id="ffeat_f_set" 
+		        placeholder="input ffeat_f_set 1111111444">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_Num</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_num" 
+		        value ={{freq_band_num}}
+        		id="freq_band_num" 
+		        placeholder="input band_num value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_1_Center</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_1_center" 
+		        value ={{freq_band_1_center}}
+        		id="freq_band_1_center" 
+		        placeholder="input band 1 center value">
+		  </td>
+		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_1_Range</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_1_range" 
+		        value ={{freq_band_1_range}}
+        		id="freq_band_1_range" 
+		        placeholder="input band 1 range value">
+		  </td>
+		</tr>				
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_2_Center</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_2_center" 
+		        value ={{freq_band_2_center}}
+        		id="freq_band_2_center" 
+		        placeholder="input band 2 center value">
+		  </td>
+		</tr>				
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_2_Range</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_2_range" 
+		        value ={{freq_band_2_range}}
+        		id="freq_band_2_range" 
+		        placeholder="input band 2 range value">
+		  </td>
+		</tr>				
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_3_Center</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_3_center" 
+		        value ={{freq_band_3_center}}
+        		id="freq_band_3_center" 
+		        placeholder="input band 3 center value">
+		  </td>
+		</tr>				
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_3_Range</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_3_range" 
+		        value ={{freq_band_3_range}}
+        		id="freq_band_3_range" 
+		        placeholder="input band 3 range value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_4_Center</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_4_center" 
+		        value ={{freq_band_4_center}}
+        		id="freq_band_4_center" 
+		        placeholder="input band 4 center value">
+		  </td>
+		</tr>	
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_4_Range</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_4_range" 
+		        value ={{freq_band_4_range}}
+        		id="freq_band_4_range" 
+		        placeholder="input band 4 range value">
+		  </td>
+		</tr>	
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_5_Center</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_5_center" 
+		        value ={{freq_band_5_center}}
+        		id="freq_band_5_center" 
+		        placeholder="input band 5 center value">
+		  </td>
+		</tr>				
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_5_Range</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_5_range" 
+		        value ={{freq_band_5_range}}
+        		id="freq_band_5_range" 
+		        placeholder="input band 5 range value">
+		  </td>
+		</tr>	
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_6_Center</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_6_center" 
+		        value ={{freq_band_6_center}}
+        		id="freq_band_6_center" 
+		        placeholder="input band 6 center value">
+		  </td>
+		</tr>				
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_6_Range</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_6_range" 
+		        value ={{freq_band_6_range}}
+        		id="freq_band_6_range" 
+		        placeholder="input band 6 range value">
+		  </td>
+		</tr>				
+	
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_7_Center</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_7_center" 
+		        value ={{freq_band_7_center}}
+        		id="freq_band_7_center" 
+		        placeholder="input band 7 center value">
+		  </td>
+		</tr>				
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_7_Range</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_7_range" 
+		        value ={{freq_band_7_range}}
+        		id="freq_band_7_range" 
+		        placeholder="input band 7 range value">
+		  </td>
+		</tr>
+
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_8_Center</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_8_center" 
+		        value ={{freq_band_8_center}}
+        		id="freq_band_8_center" 
+		        placeholder="input band 8 center value">
+		  </td>
+		</tr>				
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_8_Range</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_8_range" 
+		        value ={{freq_band_8_range}}
+        		id="freq_band_8_range" 
+		        placeholder="input band 8 range value">
+		  </td>
+		</tr>					
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_9_Center</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_9_center" 
+		        value ={{freq_band_9_center}}
+        		id="freq_band_9_center" 
+		        placeholder="input band 9 center value">
+		  </td>
+		</tr>				
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_9_Range</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_9_range" 
+		        value ={{freq_band_9_range}}
+        		id="freq_band_9_range" 
+		        placeholder="input band 9 range value">
+		  </td>
+		</tr>	
+	
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_10_Center</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_10_center" 
+		        value ={{freq_band_10_center}}
+        		id="freq_band_3_center" 
+		        placeholder="input band 10 center value">
+		  </td>
+		</tr>				
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Band_10_Range</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_band_10_range" 
+		        value ={{freq_band_10_range}}
+        		id="freq_band_10_range" 
+		        placeholder="input band 10 range value">
+		  </td>
+		</tr>				
+
+		
+		
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	 </tbody>
+	</table>
+	<br/>
+		      
+	<button type="submit" class="btn btn-primary">Save</button>
+	
+</form>
+<br><br>
+{% endblock %}
+
