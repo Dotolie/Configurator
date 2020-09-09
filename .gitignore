@@ -1,2 +1,3 @@
 *.pyc
+*.ini
 __pycache__
