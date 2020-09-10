@@ -13,19 +13,32 @@
 	<style type="text/css">
        body { background: #101010a0 !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
        img {  width: 100px;   height: 40px; float:left;   }
+       .navbar {
+  background: hotpink;
+  margin: 0; padding: 0;
+  list-style: none;
+  position: fixed;
+  width: 100%;
+}
+		h1 { text-align: center; }
+		button {
+		float:right;
+		padding: 10px;
+		margin: 20px;
+		width:180px;
+		}
+  
     </style>
     <title>IOT-BOX</title>
   </head>
   <body>
     {% include "navbar.html" %} 
-    <div class= "container">
+
 <!-- 템플릿 상속 ! -->
 
       {% block contents %}
       {% endblock %}
 
-
-  </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <!--
