@@ -18,7 +18,6 @@
       <th>Value</th>
     </tr>
   </thead>
-  	
   <tbody>
 		<tr>
 			<td rowspan="8" align="center" style="vertical-align:middle">COMMON</td>
@@ -709,7 +708,7 @@
 		</tr>			
 
 		<tr>
-			<td rowspan="34" align="center" style="vertical-align:middle">VIB_Setting</td>
+			<td rowspan="38" align="center" style="vertical-align:middle">VIB_Setting</td>
 			<td align="center" style="vertical-align:middle">EQPID</td>		
 			<td>
 		        <input type="text" 
@@ -743,6 +742,16 @@
 		  </td>
 		</tr>
 		<tr>
+			<td align="center" style="vertical-align:middle">FTP_Log_Enable</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "ftp_log_enable" 
+		        value ={{ftp_log_enable}}
+        		id="ftp_log_enable" 
+		        placeholder="input log enable value">
+		  </td>
+		</tr>		<tr>
 			<td align="center" style="vertical-align:middle">FTP_Log_Raw_Enable</td>		
 			<td>
 		        <input type="number" 
@@ -750,7 +759,7 @@
 		        name = "ftp_log_raw_enable" 
 		        value ={{ftp_log_raw_enable}}
         		id="ftp_log_raw_enable" 
-		        placeholder="input raw value">
+		        placeholder="input log raw enable value">
 		  </td>
 		</tr>
 		<tr>
@@ -787,14 +796,14 @@
 		  </td>
 		</tr>
 		<tr>
-			<td align="center" style="vertical-align:middle">Sample_N</td>		
+			<td align="center" style="vertical-align:middle">Sampled_N</td>		
 			<td>
 		        <input type="number" 
 		        class="form-control" 
-		        name = "sample_n" 
-		        value ={{sample_n}}
-        		id="sample_n" 
-		        placeholder="input sample_n value">
+		        name = "sampled_n" 
+		        value ={{sampled_n}}
+        		id="sampled_n" 
+		        placeholder="input sampled_n value">
 		  </td>
 		</tr>
 		<tr>
@@ -854,6 +863,39 @@
 		        placeholder="input ffeat_f_set 1111111444">
 		  </td>
 		</tr>			
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Remove_DC</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_remove_dc" 
+		        value ={{freq_remove_dc}}
+        		id="freq_remove_dc" 
+		        placeholder="input remove_dc value">
+		  </td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Remove_DC_Band</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_remove_dc_band" 
+		        value ={{freq_remove_dc_band}}
+        		id="freq_remove_dc_band" 
+		        placeholder="input remove_dc_band value">
+		  </td>
+		</tr>		
+		<tr>
+			<td align="center" style="vertical-align:middle">Freq_Decend_N</td>		
+			<td>
+		        <input type="number" 
+		        class="form-control" 
+		        name = "freq_decend_n" 
+		        value ={{freq_decend_n}}
+        		id="freq_decend_n" 
+		        placeholder="input decend_n value">
+		  </td>
+		</tr>
 		<tr>
 			<td align="center" style="vertical-align:middle">Freq_Band_Num</td>		
 			<td>

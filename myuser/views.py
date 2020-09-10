@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from .models import Myuser
 from django.http import HttpResponse
-
+from django.contrib.auth import login as dlogin, logout as dlogout, authenticate
 from configparser import ConfigParser
 import subprocess 
 import time
 import threading
-
-from django.contrib.auth import login as dlogin, logout as dlogout, authenticate
+import os.path  
 
 # Create your views here.
 
@@ -96,12 +95,15 @@ def ConfigRead():
         ftp_log_feat_enable = config_parser.get('VIB_Setting', 'FTP_Log_Feat_Enable', fallback=0)
         ftp_log_buffer = config_parser.get('VIB_Setting', 'FTP_Log_Buffer', fallback=300)
         ftp_log_split = config_parser.get('VIB_Setting', 'FTP_Log_Split', fallback=2)
-        sample_n = config_parser.get('VIB_Setting', 'Sample_N', fallback=20280)
+        sampled_n = config_parser.get('VIB_Setting', 'Sampled_N', fallback=20280)
         iot_send_interval = config_parser.get('VIB_Setting', 'IoT_Send_Interval', fallback=0)
         feat_t_set = config_parser.get('VIB_Setting', 'Feat_T_Set', fallback='11111111')
         feat_f_set = config_parser.get('VIB_Setting', 'Feat_F_Set', fallback='1111111444')
         ffeat_t_set = config_parser.get('VIB_Setting', 'FFeat_T_Set', fallback='11111111')
         ffeat_f_set = config_parser.get('VIB_Setting', 'FFeat_F_Set', fallback='1111111444')
+        freq_remove_dc = config_parser.get('VIB_Setting', 'Freq_Remove_DC', fallback=0)
+        freq_remove_dc_band = config_parser.get('VIB_Setting', 'Freq_Remove_DC_Band', fallback=5)
+        freq_decend_n = config_parser.get('VIB_Setting', 'Freq_Decend_N', fallback=5)
         freq_band_num = config_parser.get('VIB_Setting', 'Freq_Band_Num', fallback=3)
         freq_band_1_center = config_parser.get('VIB_Setting', 'Freq_Band_1_Center', fallback=61)
         freq_band_1_range = config_parser.get('VIB_Setting', 'Freq_Band_1_Range', fallback=10)
@@ -199,12 +201,15 @@ def ConfigRead():
         ftp_log_feat_enable = 0
         ftp_log_buffer = 300
         ftp_log_split = 2
-        sample_n = 20280
+        sampled_n = 20280
         iot_send_interval =0 
         feat_t_set = '11111111'
         feat_f_set = '1111111444'
         ffeat_t_set = '11111111'
         ffeat_f_set = '1111111444'
+        freq_remove_dc = 0
+        freq_remove_dc_band = 5
+        freq_decend_n = 5        
         freq_band_num = 3
         freq_band_1_center = 61
         freq_band_1_range = 10
@@ -311,17 +316,20 @@ def ConfigRead():
     data['eqpid'] = eqpid;
     data['chid'] = chid;
     data['debug_mode_enable'] = debug_mode_enable
-    data['ftp_log_raw_enable'] = ftp_log_raw_enable
+    data['ftp_log_enable'] = ftp_log_enable
     data['ftp_log_raw_enable'] = ftp_log_raw_enable
     data['ftp_log_feat_enable'] = ftp_log_feat_enable
     data['ftp_log_buffer'] = ftp_log_buffer
     data['ftp_log_split'] = ftp_log_split
-    data['sample_n'] = sample_n
+    data['sampled_n'] = sampled_n
     data['iot_send_interval'] = iot_send_interval
     data['feat_t_set'] = feat_t_set
     data['feat_f_set'] = feat_f_set
     data['ffeat_t_set'] = ffeat_t_set
     data['ffeat_f_set'] = ffeat_f_set
+    data['freq_remove_dc'] = freq_remove_dc
+    data['freq_remove_dc_band'] = freq_remove_dc_band
+    data['freq_decend_n'] = freq_decend_n
     data['freq_band_num'] = freq_band_num
     data['freq_band_1_center'] = freq_band_1_center
     data['freq_band_1_range'] = freq_band_1_range
@@ -423,16 +431,20 @@ def ConfigWrite(data):
             'EQPID' : data['eqpid'],
             'CHID' : data['chid'],
             'Debug_Mode_Enable' : data['debug_mode_enable'],
+            'FTP_Log_Enable' : data['ftp_log_enable'],
             'FTP_Log_Raw_Enable' : data['ftp_log_raw_enable'],
             'FTP_Log_Feat_Enable' : data['ftp_log_feat_enable'],
             'FTP_Log_Buffer' : data['ftp_log_buffer'],
             'FTP_Log_Split' : data['ftp_log_split'],
-            'Sample_N' : data['sample_n'],
+            'Sampled_N' : data['sampled_n'],
             'IoT_Send_Interval' : data['iot_send_interval'],
             'Feat_T_Set' : data['feat_t_set'],
             'Feat_F_Set' : data['feat_f_set'],
             'FFeat_T_Set' : data['ffeat_t_set'],
             'FFeat_F_Set' : data['ffeat_f_set'],
+            'Freq_Remove_DC' : data['freq_remove_dc'],
+            'Freq_Remove_DC_Band' : data['freq_remove_dc_band'],
+            'Freq_Decend_N' : data['freq_decend_n'],
             'Freq_Band_Num' : data['freq_band_num'],
             'Freq_Band_1_Center' : data['freq_band_1_center'],
             'Freq_Band_1_Range' : data['freq_band_1_range'],
@@ -557,16 +569,20 @@ def save(request):
         response_data['eqpid'] = request.POST.get('eqpid', 'MVT')
         response_data['chid'] = request.POST.get('chid', 'B')
         response_data['debug_mode_enable'] = request.POST.get('debug_mode_enable', 0)
+        response_data['ftp_log_enable'] = request.POST.get('ftp_log_enable', 0)        
         response_data['ftp_log_raw_enable'] = request.POST.get('ftp_log_raw_enable', 0)
         response_data['ftp_log_feat_enable'] = request.POST.get('ftp_log_feat_enable', 0)
         response_data['ftp_log_buffer'] = request.POST.get('ftp_log_buffer', 300)
         response_data['ftp_log_split'] = request.POST.get('ftp_log_split', 2)
-        response_data['sample_n'] = request.POST.get('sample_n', 20280)
+        response_data['sampled_n'] = request.POST.get('sampled_n', 20280)
         response_data['iot_send_interval'] = request.POST.get('iot_send_interval', 0)
         response_data['feat_t_set'] = request.POST.get('feat_t_set', '11111111')
         response_data['feat_f_set'] = request.POST.get('feat_f_set', '1111111444')
         response_data['ffeat_t_set'] = request.POST.get('ffeat_t_set', '11111111')
         response_data['ffeat_f_set'] = request.POST.get('ffeat_f_set', '1111111444')
+        response_data['freq_remove_dc'] = request.POST.get('freq_remove_dc', 0)
+        response_data['freq_remove_dc_band'] = request.POST.get('freq_remove_dc_band', 5)
+        response_data['freq_decend_n'] = request.POST.get('freq_decend_N', 5)        
         response_data['freq_band_num'] = request.POST.get('freq_band_num', 3)
         response_data['freq_band_1_center'] = request.POST.get('freq_band_1_center', 61)
         response_data['freq_band_1_range'] = request.POST.get('freq_band_1_range', 10)
@@ -603,6 +619,9 @@ def save(request):
 def login(request):
     response_data = {}
 
+    if os.path.isdir('/home/iot-box') is False:
+        return HttpResponse('')
+    
     if request.method == "GET" :
         return render(request, 'login.html')
 
