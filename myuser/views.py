@@ -11,8 +11,8 @@ from django.contrib.auth import login as dlogin, logout as dlogout, authenticate
 
 # Create your views here.
 
-# path ="/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
-path = './myuser/config_ssengine.ini'
+path ="/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
+#path = './myuser/config_ssengine.ini'
 
 
 
