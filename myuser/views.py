@@ -24,18 +24,47 @@ def ConfigRead():
     if res:
         ftpaddress = config_parser.get('COMMON', 'FTPADDRESS', fallback='10.166.101.49')
         ftpport = config_parser.get('COMMON', 'FTPPORT', fallback=21)
-        samplerate = config_parser.get('COMMON', 'samplerate', fallback=20282)
-        signaltype = config_parser.get('COMMON', 'Signaltype', fallback=1)
-        cutoff = config_parser.get('COMMON', 'cutoff', fallback=10141)
+        samplerate = config_parser.get('COMMON', 'samplerate', fallback=8000)
+        signaltype = config_parser.get('COMMON', 'Signaltype', fallback=2)
+        cutoff = config_parser.get('COMMON', 'cutoff', fallback=4000)
         usefilter = config_parser.get('COMMON', 'use filter', fallback=1)
         window = config_parser.get('COMMON', 'window', fallback=3)
         taps = config_parser.get('COMMON', 'taps', fallback=16)
 
-        ch_count = config_parser.get('CHANNEL', 'CH_count', fallback=4)
+        ch_count = config_parser.get('CHANNEL', 'CH_count', fallback=16)
         ch0 = config_parser.get('CHANNEL', 'ch0', fallback=1)
         ch1 = config_parser.get('CHANNEL', 'ch1', fallback=1)
         ch2 = config_parser.get('CHANNEL', 'ch2', fallback=1)
         ch3 = config_parser.get('CHANNEL', 'ch3', fallback=1)
+        ch4 = config_parser.get('CHANNEL', 'ch4', fallback=1)
+        ch5 = config_parser.get('CHANNEL', 'ch5', fallback=1)
+        ch6 = config_parser.get('CHANNEL', 'ch6', fallback=1)
+        ch7 = config_parser.get('CHANNEL', 'ch7', fallback=1)
+        ch8 = config_parser.get('CHANNEL', 'ch8', fallback=1)
+        ch9 = config_parser.get('CHANNEL', 'ch9', fallback=1)
+        ch10 = config_parser.get('CHANNEL', 'ch10', fallback=1)
+        ch11 = config_parser.get('CHANNEL', 'ch11', fallback=1)
+        ch12 = config_parser.get('CHANNEL', 'ch12', fallback=1)
+        ch13 = config_parser.get('CHANNEL', 'ch13', fallback=1)
+        ch14 = config_parser.get('CHANNEL', 'ch14', fallback=1)
+        ch15 = config_parser.get('CHANNEL', 'ch15', fallback=1)
+
+        ch0_volt = config_parser.get('VOLTAGECHANNEL', 'ch0', fallback=1)
+        ch1_volt = config_parser.get('VOLTAGECHANNEL', 'ch1', fallback=1)
+        ch2_volt = config_parser.get('VOLTAGECHANNEL', 'ch2', fallback=1)
+        ch3_volt = config_parser.get('VOLTAGECHANNEL', 'ch3', fallback=1)
+        ch4_volt = config_parser.get('VOLTAGECHANNEL', 'ch4', fallback=1)
+        ch5_volt = config_parser.get('VOLTAGECHANNEL', 'ch5', fallback=1)
+        ch6_volt = config_parser.get('VOLTAGECHANNEL', 'ch6', fallback=1)
+        ch7_volt = config_parser.get('VOLTAGECHANNEL', 'ch7', fallback=1)
+        ch8_volt = config_parser.get('VOLTAGECHANNEL', 'ch8', fallback=1)
+        ch9_volt = config_parser.get('VOLTAGECHANNEL', 'ch9', fallback=1)
+        ch10_volt = config_parser.get('VOLTAGECHANNEL', 'ch10', fallback=1)
+        ch11_volt = config_parser.get('VOLTAGECHANNEL', 'ch11', fallback=1)
+        ch12_volt = config_parser.get('VOLTAGECHANNEL', 'ch12', fallback=1)
+        ch13_volt = config_parser.get('VOLTAGECHANNEL', 'ch13', fallback=1)
+        ch14_volt = config_parser.get('VOLTAGECHANNEL', 'ch14', fallback=1)
+        ch15_volt = config_parser.get('VOLTAGECHANNEL', 'ch15', fallback=1)
 
         busedopposite = config_parser.get('DATA', 'bUsedOpposite', fallback=0)
         ch0_gravity_calc = config_parser.get('DATA', 'ch0_Gravity_Calc', fallback=5)
@@ -128,20 +157,49 @@ def ConfigRead():
 
         
     else:
-        samplerate = 20282
+        samplerate = 8000
         ftpaddress = '10.166.101.49'
         ftpport = 21
-        signaltype = 1
-        cutoff = 10141
+        signaltype = 2
+        cutoff = 4000
         usefilter = 1
         window = 3
         taps = 16
 
-        ch_count = 4
+        ch_count = 16
         ch0 = 1
         ch1 = 1
         ch2 = 1
         ch3 = 1
+        ch4 = 1
+        ch5 = 1
+        ch6 = 1
+        ch7 = 1
+        ch8 = 1
+        ch9 = 1
+        ch10 = 1
+        ch11 = 1
+        ch12 = 1
+        ch13 = 1
+        ch14 = 1
+        ch15 = 1
+        
+        ch0_volt = 1
+        ch1_volt = 1
+        ch2_volt = 1
+        ch3_volt = 1
+        ch4_volt = 1
+        ch5_volt = 1
+        ch6_volt = 1
+        ch7_volt = 1
+        ch8_volt = 1
+        ch9_volt = 1
+        ch10_volt = 1
+        ch11_volt = 1
+        ch12_volt = 1
+        ch13_volt = 1
+        ch14_volt = 1
+        ch15_volt = 1
         
         busedopposite = 0
         ch0_gravity_calc = 5
@@ -247,6 +305,35 @@ def ConfigRead():
     data['ch1'] = ch1
     data['ch2'] = ch2
     data['ch3'] = ch3
+    data['ch4'] = ch4
+    data['ch5'] = ch5
+    data['ch6'] = ch6
+    data['ch7'] = ch7
+    data['ch8'] = ch8
+    data['ch9'] = ch9
+    data['ch10'] = ch10
+    data['ch11'] = ch11
+    data['ch12'] = ch12
+    data['ch13'] = ch13
+    data['ch14'] = ch14
+    data['ch15'] = ch15
+
+    data['ch0_volt'] = ch0_volt
+    data['ch1_volt'] = ch1_volt
+    data['ch2_volt'] = ch2_volt
+    data['ch3_volt'] = ch3_volt
+    data['ch4_volt'] = ch4_volt
+    data['ch5_volt'] = ch5_volt
+    data['ch6_volt'] = ch6_volt
+    data['ch7_volt'] = ch7_volt
+    data['ch8_volt'] = ch8_volt
+    data['ch9_volt'] = ch9_volt
+    data['ch10_volt'] = ch10_volt
+    data['ch11_volt'] = ch11_volt
+    data['ch12_volt'] = ch12_volt
+    data['ch13_volt'] = ch13_volt
+    data['ch14_volt'] = ch14_volt
+    data['ch15_volt'] = ch15_volt
 
     data['busedopposite'] = busedopposite
     data['ch0_gravity_calc'] = ch0_gravity_calc
@@ -374,6 +461,36 @@ def ConfigWrite(data):
             'CH1' : data['ch1'],
             'CH2' : data['ch2'],
             'CH3' : data['ch3'],
+            'CH4' : data['ch4'],
+            'CH5' : data['ch5'],
+            'CH6' : data['ch6'],
+            'CH7' : data['ch7'],
+            'CH8' : data['ch8'],
+            'CH9' : data['ch9'],
+            'CH10' : data['ch10'],
+            'CH11' : data['ch11'],
+            'CH12' : data['ch12'],
+            'CH13' : data['ch13'],
+            'CH14' : data['ch14'],
+            'CH15' : data['ch15'],
+    }
+    config_writer['VOLTAGECHANNEL'] = {
+            'CH0' : data['ch0_volt'],
+            'CH1' : data['ch1_volt'],
+            'CH2' : data['ch2_volt'],
+            'CH3' : data['ch3_volt'],
+            'CH4' : data['ch4_volt'],
+            'CH5' : data['ch5_volt'],
+            'CH6' : data['ch6_volt'],
+            'CH7' : data['ch7_volt'],
+            'CH8' : data['ch8_volt'],
+            'CH9' : data['ch9_volt'],
+            'CH10' : data['ch10_volt'],
+            'CH11' : data['ch11_volt'],
+            'CH12' : data['ch12_volt'],
+            'CH13' : data['ch13_volt'],
+            'CH14' : data['ch14_volt'],
+            'CH15' : data['ch15_volt'],
     }
     config_writer['DATA'] = {
             'bUsedOpposite' : data['busedopposite'],
@@ -493,12 +610,14 @@ def save(request):
     if request.user.is_authenticated:      
         response_data['ftpaddress'] = request.POST.get('ftpaddress', "10.166.101.49")
         response_data['ftpport'] = request.POST.get('ftpport', 21)
-        response_data['samplerate'] = request.POST.get('samplerate', 20282)
-        if int(request.POST.get('samplerate')) > 65536:
+        response_data['samplerate'] = request.POST.get('samplerate', 8000)
+        if int(request.POST.get('samplerate')) > 8000:
             response_data['error'] = "Wrong value of samplerate," + request.POST.get('samplerate')
 
-        response_data['signaltype'] = request.POST.get('signaltype', 1)
-        response_data['cutoff'] = request.POST.get('cutoff', 10141)
+        response_data['signaltype'] = request.POST.get('signaltype', 2)
+        if int(request.POST.get('signaltype')) > 2:
+            response_data['error'] = "Wrong value of signaltype," + request.POST.get('signaltype')
+        response_data['cutoff'] = request.POST.get('cutoff', 4000)
         response_data['usefilter'] = request.POST.get('usefilter', 1)
         response_data['window'] = request.POST.get('window', 3)
         if int(request.POST.get('window')) > 100:
@@ -508,13 +627,42 @@ def save(request):
         if int(request.POST.get('taps')) > 100:
             response_data['error'] = "Wrong value of taps," + request.POST.get('taps')
 
-        response_data['ch_count'] = request.POST.get('ch_count', 4)
-        if int(request.POST.get('ch_count')) > 4:
+        response_data['ch_count'] = request.POST.get('ch_count', 16)
+        if int(request.POST.get('ch_count')) > 16:
             response_data['error'] = "Wrong value of CH_count," + request.POST.get('ch_count')
         response_data['ch0'] = request.POST.get('ch0', 1)
         response_data['ch1'] = request.POST.get('ch1', 1)
         response_data['ch2'] = request.POST.get('ch2', 1)
         response_data['ch3'] = request.POST.get('ch3', 1)
+        response_data['ch4'] = request.POST.get('ch4', 1)
+        response_data['ch5'] = request.POST.get('ch5', 1)
+        response_data['ch6'] = request.POST.get('ch6', 1)
+        response_data['ch7'] = request.POST.get('ch7', 1)
+        response_data['ch8'] = request.POST.get('ch8', 1)
+        response_data['ch9'] = request.POST.get('ch9', 1)
+        response_data['ch10'] = request.POST.get('ch10', 1)
+        response_data['ch11'] = request.POST.get('ch11', 1)
+        response_data['ch12'] = request.POST.get('ch12', 1)
+        response_data['ch13'] = request.POST.get('ch13', 1)
+        response_data['ch14'] = request.POST.get('ch14', 1)
+        response_data['ch15'] = request.POST.get('ch15', 1)
+
+        response_data['ch0_volt'] = request.POST.get('ch0_volt', 1)
+        response_data['ch1_volt'] = request.POST.get('ch1_volt', 1)
+        response_data['ch2_volt'] = request.POST.get('ch2_volt', 1)
+        response_data['ch3_volt'] = request.POST.get('ch3_volt', 1)
+        response_data['ch4_volt'] = request.POST.get('ch4_volt', 1)
+        response_data['ch5_volt'] = request.POST.get('ch5_volt', 1)
+        response_data['ch6_volt'] = request.POST.get('ch6_volt', 1)
+        response_data['ch7_volt'] = request.POST.get('ch7_volt', 1)
+        response_data['ch8_volt'] = request.POST.get('ch8_volt', 1)
+        response_data['ch9_volt'] = request.POST.get('ch9_volt', 1)
+        response_data['ch10_volt'] = request.POST.get('ch10_volt', 1)
+        response_data['ch11_volt'] = request.POST.get('ch11_volt', 1)
+        response_data['ch12_volt'] = request.POST.get('ch12_volt', 1)
+        response_data['ch13_volt'] = request.POST.get('ch13_volt', 1)
+        response_data['ch14_volt'] = request.POST.get('ch14_volt', 1)
+        response_data['ch15_volt'] = request.POST.get('ch15_volt', 1)
 
         response_data['busedopposite'] = request.POST.get('busedopposite', 0)
         response_data['ch0_gravity_calc'] = request.POST.get('ch0_gravity_calc', 5)
