@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block contents %}
+
+<br><br><br><br>
+<h1>upload file</h1>
+<br>
+<div class ="container">
+<div class = "col-12" >
+
+      <form enctype="multipart/form-data" action="" method="post"> <!-- Do not forget to add: enctype="multipart/form-data" -->
+      {% csrf_token %}
+      {% if filename == None %}
+          <div class="form-group">
+     		<input type="file" class="form-control" name="docfile" required id="id_docfile">
+          </div>
+          <button type="submit" class="btn btn-primary">Load</button>
+      {% else %}             
+          <div class="form-group">
+     		<input type="text" class="form-control" name="docfile" disabled value={{ filename }}>
+          </div>
+          <input type='hidden' id='update' name='update' value='1'>
+          <button type="submit" class="btn btn-primary">Update</button>
+      {% endif %}  
+</div>
+</div>
+
+{% endblock %}

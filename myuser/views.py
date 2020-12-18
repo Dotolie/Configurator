@@ -3,8 +3,14 @@ from .models import Myuser
 from django.http import HttpResponse
 from django.contrib.auth import login as dlogin, logout as dlogout, authenticate
 from configparser import ConfigParser
+from .forms import DocumentForm
+from .models import Document
+from django.template import loader, RequestContext
+from django.template import Context, Template
+
 import subprocess 
 import time
+import datetime
 import threading
 import os.path  
 
@@ -13,7 +19,45 @@ import os.path
 path ="/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
 #path = './myuser/config_ssengine.ini'
 
+def thflash():
+    run = subprocess.check_output(["chmod", "+x", "media/a64.sh"])
+    run = subprocess.check_output(["./media/a64.sh"])
 
+def flash(request):
+    value = {}
+    count=request.GET.get('count', None)
+    if int(count) == 0:
+        t = threading.Thread(target=thflash)
+        t.start()
+    else:
+        command = subprocess.check_output(["cat","./media/status"])
+        value['command']=  command.decode('utf-8')
+
+    return render(request, 'flash.html', value )
+
+def upload_doc(request):
+    if request.user.is_authenticated:
+        context = {}
+        form = DocumentForm()
+        if request.method == 'POST':
+            form = DocumentForm(request.POST, request.FILES)  # Do not forget to add: request.FILES
+            update = request.POST.get('update', None)
+            if update == None:
+                if form.is_valid():
+                    newdoc = Document(docfile=request.FILES['docfile'])
+                    newdoc.save()
+                    context['filename'] = request.FILES['docfile']
+                    return render(request, 'upload_doc.html', context)
+            else:
+                return redirect('/user/update')
+
+        return render(request, 'upload_doc.html', context)
+    return redirect('/user/login')    
+
+def update(request):
+    if request.user.is_authenticated:
+        return render(request, 'update.html')
+    return redirect('/user/login')    
 
 def ConfigRead():
     data = {}
