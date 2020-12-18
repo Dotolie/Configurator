@@ -10,5 +10,8 @@ urlpatterns = [
     path('save/', views.save, name='save' ),
     path('restart/', views.restart, name='restart' ),
     path('shutdown/', views.shutdown, name='shutdown' ),
+    path('upload/', views.upload_doc, name='upload' ),
+    path('update/', views.update, name='update' ),
+    path('flash/', views.flash, name='flash' ),
 
 ]

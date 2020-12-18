@@ -1,0 +1,55 @@
+﻿
+{% extends "base.html" %}
+{% block contents %}
+
+<script src="/static/jquery.min.js"  ></script>    
+<script type-'text/javascript'>
+	var count = 0
+	var stop = 0
+	var last =""
+	function getData() {
+		$.ajax({
+			url : '/user/flash/',
+			data : {count:count},
+			success:function(data){
+				if( data != last) {
+					$('#memo').append('<p>');
+					$('#memo').append('</p>');
+					$('#memo').append(data);
+					}
+				else {
+					$('#memo').append('.');
+					}
+				if( data.indexOf("complete") != -1 ) {
+					stop = 1;
+					$('#memo').append('<p>');
+					$('#memo').append('<button type="submit" class="btn btn-primary" >OK</button>');
+					$('#memo').append('</p>');
+					}
+				last = data;				
+				}
+			});
+		if(stop == 0 )
+		    setTimeout("getData()",1000);
+   		count = 1
+		}
+		
+    window.onload=function() {
+		getData();
+		}
+ 
+</script>
+
+<br><br><br><br>
+<h1>updating</h1>
+<div class ="container">
+	<div class = "col-12 ">
+	 <form  action="/user/logout/" method="post">
+	  {% csrf_token %}
+		<span style="color:yellow;" id='memo'></span>
+		</form>
+	</div>
+  </div>
+
+{% endblock %}
+

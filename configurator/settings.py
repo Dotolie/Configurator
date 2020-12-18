@@ -125,3 +125,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),  # base_dir은 프로젝트 폴더
 ]
 AUTH_USER_MODEL = 'myuser.Myuser'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+
