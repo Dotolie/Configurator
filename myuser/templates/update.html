@@ -26,7 +26,11 @@
 					$('#memo').append('<button type="submit" class="btn btn-primary" >OK</button>');
 					$('#memo').append('</p>');
 					}
-				last = data;				
+				if( data.indexOf("error") != -1 ) {
+					stop = 1;
+					data ="x"
+					}
+				last = data;
 				}
 			});
 		if(stop == 0 )
