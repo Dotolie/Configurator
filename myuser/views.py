@@ -30,8 +30,11 @@ def flash(request):
         t = threading.Thread(target=thflash)
         t.start()
     else:
-        command = subprocess.check_output(["cat","./media/status"])
-        value['command']=  command.decode('utf-8')
+        try:
+            command = subprocess.check_output(["cat","./media/status"])
+            value['command']=  command.decode('utf-8')
+        except subprocess.CalledProcessError as e:
+            value['command']= "error"
 
     return render(request, 'flash.html', value )
 
