@@ -22,6 +22,7 @@ g_model = "it"
 path_envlist = "/mnt/tmp/env_list.txt"
 path_iotcap = "/tmp/iot-cap"
 path_iotput = "/tmp/iot-put"
+path_fpga = "/tmp/fpga"
 path_configs = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/"
 path_sconfig2 = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine2.ini"
 path_sconfig = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
@@ -742,6 +743,12 @@ def index(request):
         except FileNotFoundError:
             iotputversion = "not defined"
 
+        try:
+            f = open(path_fpga, 'r');
+            fpgaversion = f.read()
+            f.close()
+        except FileNotFoundError:
+            fpgaversion = "not defined"
             
         response_data['username'] = request.user.username
         response_data['model'] = model[1]   
@@ -751,6 +758,7 @@ def index(request):
         response_data['server'] = server[1]
         response_data['iotcapver'] = iotcapversion
         response_data['iotputver'] = iotputversion
+        response_data['fpgaver'] = fpgaversion
 
         return render( request, 'home-new.html', response_data ) 
 
