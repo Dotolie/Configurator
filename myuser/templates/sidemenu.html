@@ -1,0 +1,113 @@
+<!-- 네비게이션바 -->
+
+<!-- Sidebar -->
+<div class="w3-sidebar w3-bar-block w3-light-grey w3-card" style="display:none" id="mySidebar">
+  <button class="w3-bar-item w3-button w3-large"  onclick="w3_close()">Close &times;</button>
+
+  {% if user.is_authenticated %}
+	<div class="w3-dropdown-click">
+		<button class="w3-button" onclick="myDropFunc()">
+		  CONFIG EDIT &#9660<i class="fa fa-caret-down"></i>
+		</button>
+		<div id="demoDrop" class="w3-hide w3-white w3-card">
+		  <a href="{% url 'user:adcconfig' %}" class="w3-bar-item w3-button">ADC</a>
+		  <a href="{% url 'user:ssengconfig' %}" class="w3-bar-item w3-button">SSENGINE</a>
+		</div>
+	</div>
+	
+	<div class="w3-dropdown-click">  
+		<button class="w3-button w3-block w3-left-align" onclick="myAccFunc()">
+		  INI File &#9660<i class="fa fa-caret-down"></i>
+		</button>
+		<div id="demoAcc" class="w3-hide w3-white w3-card">
+		  <a href="{% url 'user:inidownload' %}" class="w3-bar-item w3-button">Download</a>
+		  <a href="{% url 'user:iniupload' %}" class="w3-bar-item w3-button">Upload</a>
+		</div>
+	</div>
+
+	<a href="{% url 'user:restart' %}" class="w3-bar-item w3-button">Restart</a>  
+	<a href="{% url 'user:reboot' %}" class="w3-bar-item w3-button">ReBoot</a>
+	<a href="{% url 'user:logout' %}" class="w3-bar-item w3-button">Logout</a>
+  {% endif %}
+</div>
+
+<div id="main">
+<!-- Page Content -->
+
+<div class="w3-teal">
+  {% if user.is_authenticated %}
+	<button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">☰</button>
+	<div class="w3-container" style="display:none" id="myTitle">
+		<h1>MVTech</h1>
+	</div>
+  {% else %}
+	<src id="openNav" class="w3-button w3-teal w3-xlarge">☰</button>
+  {% endif %}
+
+</div>
+
+<script>
+function w3_open() {
+  document.getElementById("main").style.marginLeft = "25%";
+  document.getElementById("mySidebar").style.width = "25%";
+  document.getElementById("mySidebar").style.display = "block";
+  document.getElementById("openNav").style.display = 'none';
+  document.getElementById("myTitle").style.display = 'inline-block';
+}
+function w3_close() {
+  document.getElementById("main").style.marginLeft = "0%";
+  document.getElementById("mySidebar").style.display = "none";
+  document.getElementById("openNav").style.display = "inline-block";
+  document.getElementById("myTitle").style.display = 'none';  
+}
+function myAccFunc() {
+  var x = document.getElementById("demoAcc");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+    x.previousElementSibling.className += " w3-green";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+    x.previousElementSibling.className = 
+    x.previousElementSibling.className.replace(" w3-green", "");
+  }
+}
+
+function myDropFunc() {
+  var x = document.getElementById("demoDrop");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+    x.previousElementSibling.className += " w3-green";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+    x.previousElementSibling.className = 
+    x.previousElementSibling.className.replace(" w3-green", "");
+  }
+}
+</script>
+
+<!--
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+
+    <a class="navbar-brand" href="{% url 'user:index' %}">MVTech</a>
+    <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse flex-grow-0" id="navbarNav">
+        <ul class="navbar-nav">
+	     <li class="nav-item ">
+	      {% if user.is_authenticated %}
+	  	<a class="navbar-brand" href="{% url 'user:restart' %}">Restart</a>
+	      {% endif %}        	 	
+            <li class="nav-item ">
+              {% if user.is_authenticated %}
+                <a class="nav-link" href="{% url 'user:logout' %}">Logout({{ username }})</a>
+              {% else %}
+                <a class="nav-link" href="{% url 'user:login' %}">Login</a>
+              {% endif %}
+            </li>
+        </ul>
+
+    </div>
+</nav>
+-->

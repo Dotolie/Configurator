@@ -7,33 +7,37 @@
 
     <!-- Bootstrap CSS -->
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
-
+	<link rel="stylesheet" href="/static/w3.css"/>
     <link rel="stylesheet" href="/static/bootstrap.min.css"/>
     <link rel="icon" href="/static/mv.ico">
+
 	<style type="text/css">
        body { background: #101010a0 !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
        img {  width: 100px;   height: 40px; float:left;   }
        .navbar {
-  background: hotpink;
-  margin: 0; padding: 0;
-  list-style: none;
-  position: fixed;
-  width: 100%;
-}
-		h1 { text-align: center; }
-		button {
-		float:right;
-		padding: 10px;
-		margin: 20px;
-		width:180px;
+		  background: #009980;
+		  margin: 0; padding: 0;
+		  list-style: none;
+		  position: fixed;
+		  width: 100%;
 		}
-  
+		table {
+			width: 100%;
+			border: 1px solid #444444;
+		}
+		th, td {
+			border: 1px solid #444444;
+			padding: 10px
+		}
+
     </style>
+
     <title>IOT-BOX</title>
   </head>
   <body>
-    {% include "navbar.html" %} 
 
+    {% include "navbar.html" %} 
+    
 <!-- 템플릿 상속 ! -->
 
       {% block contents %}
@@ -47,6 +51,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="/static/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>    
     -->
+    <script src="/static/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="/static/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="/static/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 

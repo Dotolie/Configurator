@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block contents %}
+
+<div class ="container">
+
+  <br><br><br><br><br>
+  
+  <h2>Information</h2>
+
+  <br><br>
+
+  <table class="w3-table">
+    <thead>
+      <tr class="w3-dark-grey">
+        <th>Item</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+
+    <tr>
+      <td>Model Name</td>
+      <td>{{model}}</td>
+    </tr>
+    <tr>
+      <td>Serial No</td>
+      <td>{{serial}}</td>
+    </tr>
+    <tr>
+      <td>UID</td>
+      <td>{{uid}}</td>
+    </tr>
+    <tr>
+      <td>SITE ID</td>
+      <td>{{siteid}}</td>
+    </tr>
+    <tr>
+      <td>SERVER URL</td>
+      <td>{{server}}</td>
+    </tr>
+    <tr>
+      <td>iot-cap version</td>
+      <td>{{iotcapver}}</td>
+    </tr>
+    <tr>
+      <td>iot-put version</td>
+      <td>{{iotputver}}</td>
+    </tr>
+    <tr>
+      <td>Maker</td>
+      <td>MVTech Co,Ltd.</td>
+    </tr>
+    
+  </table>
+
+</div>
+{% endblock %}
+

@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% block contents %}
+
+<div class ="container">
+<div class="form-group green-border">
+<br><br><br>
+<h2>ADC Configuration ({{model}})</h2>
+<br>
+
+<span style="color:yellow;"><strong>{{ error }}</strong> </span>
+	
+<form method = "POST" action="{% url 'user:adcsave' %}" >
+	{% csrf_token %}
+
+	<table class="table">
+	  <thead>
+	  	<tr class="thead-dark" align="center">
+	      <th style="width:">Group</th>
+	      <th style="width:">Items</th>
+	      <th style="width:" colspan="4">Value</th>
+	      <th>ETC</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+		<tr>
+			<td rowspan="5" align="center" style="vertical-align:middle">COMMON</td>
+			<td align="center" style="vertical-align:middle">Sample Rate [Hz]</td>		
+			<td colspan="4">
+		        <input type="number" 
+		        class="form-control" 
+		        name = "samplerate" 
+		        value ={{samplerate}}
+        		id="samplerate" 
+		        placeholder="input sample rate">
+		  	</td>
+		  	<td>
+				Range :<br>
+				{% if model == "ITB_TYPE3" %}
+					&nbsp;&nbsp;1000,2000,4000 or 8000 Hz<br>
+				{% else %}					
+					&nbsp;&nbsp;512 ~ 65536 Hz
+				{% endif %}
+		  	</td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">Use filter</td>		
+			<td colspan="4">
+				<input class="w3-check" type="checkbox" name="usefilter" {% if usefilter %}checked{% endif %} id="usefilter">
+			</td>
+		  	<td>
+		  		FIR Filter On/Off
+		  	</td>
+		</tr>		  	
+		<tr>
+			<td align="center" style="vertical-align:middle">Cutoff Freq [Hz]</td>		
+			<td colspan="4">
+		        <input type="number" 
+		        class="form-control" 
+		        name = "cutoff" 
+		         value ={{cutoff}}
+		        id="cutoff" 
+		        placeholder="input cutoff freq">
+		  	</td>
+		  	<td>
+		  		Range : <br>
+		  		&nbsp;&nbsp;~ 1/2 x Sample Rate<br>
+		  	</td>
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">window</td>		
+			<td colspan="4">
+		        <input type="number" 
+		        class="form-control" 
+		        name = "window" 
+		         value ={{window}}
+		        id="window" 
+		        placeholder="input window">
+		  	</td>
+		  	<td>
+		  		&nbsp;&nbsp;0 : RECTANGULAR, 		&nbsp;&nbsp;1 : BARTLETT<br>
+		  		&nbsp;&nbsp;2 : HANNING, 		&nbsp;&nbsp;&nbsp;&nbsp;3 : HAMMING<br>
+		  		&nbsp;&nbsp;4 : BLACKMAN
+		  	</td>		  	
+		</tr>
+		<tr>
+			<td align="center" style="vertical-align:middle">taps</td>		
+			<td colspan="4">
+		        <input type="number" 
+		        class="form-control" 
+		        name = "taps" 
+		         value ={{taps}}
+		        id="taps" 
+		        placeholder="input taps">
+		  	</td>
+		  	<td>
+		  		Range : <br>
+		  		&nbsp;&nbsp;  ~ 100<br>		  		
+		  	</td>
+		</tr>
+
+		<tr>
+			<td rowspan="8" align="center" style="vertical-align:middle">CHANNEL</td>
+			<td rowspan="2" align="center" style="vertical-align:middle">CH0~CH3</td>		
+
+			<td align="center" style="vertical-align:middle">CH0</td>		
+			<td align="center" style="vertical-align:middle">CH1</td>
+			<td align="center" style="vertical-align:middle">CH2</td>
+			<td align="center" style="vertical-align:middle">CH3</td>
+			<td rowspan="2">ADC On/Off</td>				
+		</tr>
+		<tr>
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch0" {% if ch0 %}checked{% endif %} id="ch0">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch1" {% if ch1 %}checked{% endif %} id="ch1">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch2" {% if ch2 %}checked{% endif %} id="ch2">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch3" {% if ch3 %}checked{% endif %} id="ch3">
+			</td>	
+		</tr>
+		
+{% if model == "ITB_TYPE3" %}
+		<tr>
+			<td rowspan="2" align="center" style="vertical-align:middle">CH4~CH7</td>
+		
+			<td align="center" style="vertical-align:middle">CH4</td>			
+			<td align="center" style="vertical-align:middle">CH5</td>		
+			<td align="center" style="vertical-align:middle">CH6</td>
+			<td align="center" style="vertical-align:middle">CH7</td>
+			<td rowspan="2">ADC On/Off</td>	
+		</tr>
+		<tr>
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch4" {% if ch4 %}checked{% endif %} id="ch4">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch5" {% if ch5 %}checked{% endif %} id="ch5">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch6" {% if ch6 %}checked{% endif %} id="ch6">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch7" {% if ch7 %}checked{% endif %} id="ch7">
+			</td> 				
+		</tr>
+
+		<tr>
+			<td rowspan="2" align="center" style="vertical-align:middle">CH8~CH11</td>
+
+			<td align="center" style="vertical-align:middle">CH8</td>
+			<td align="center" style="vertical-align:middle">CH9</td>			
+			<td align="center" style="vertical-align:middle">CH10</td>		
+			<td align="center" style="vertical-align:middle">CH11</td>
+			<td rowspan="2">ADC On/Off</td>	
+		</tr>
+		<tr>
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch8" {% if ch8 %}checked{% endif %} id="ch8">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch9" {% if ch9 %}checked{% endif %} id="ch9">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch10" {% if ch10 %}checked{% endif %} id="ch10">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch11" {% if ch11 %}checked{% endif %} id="ch11">
+			</td> 				
+		</tr>
+		<tr>
+			<td rowspan="2" align="center" style="vertical-align:middle">CH11~CH15</td>
+
+			<td align="center" style="vertical-align:middle">CH12</td>
+			<td align="center" style="vertical-align:middle">CH13</td>
+			<td align="center" style="vertical-align:middle">CH14</td>			
+			<td align="center" style="vertical-align:middle">CH15</td>
+			<td rowspan="2">ADC On/Off</td>	
+		</tr>
+		<tr>
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch12" {% if ch12 %}checked{% endif %} id="ch12">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch13" {% if ch13 %}checked{% endif %} id="ch13">
+			</td> 				
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch14" {% if ch14 %}checked{% endif %} id="ch14">
+			</td>
+		  	<td align="center">
+ 				<input class="w3-check" type="checkbox" name="ch15" {% if ch15 %}checked{% endif %} id="ch15">
+			</td> 
+
+		</tr>
+
+		<tr>
+			<td align="center" style="vertical-align:middle">VOLTAGE CHANNEL</td>
+			<td align="center" style="vertical-align:middle">CH0~CH15</td>		
+
+			<td colspan="4">
+				<input class="w3-check" type="checkbox" name="voltage" {% if voltage %}checked{% endif %} id="voltage">
+			</td>
+			<td >DC24V On/Off</td>				
+		</tr>
+{% endif %}
+
+	 </tbody>
+	</table>
+	<br/>
+	
+  <div class="text-center">
+	  <button type="submit" class="btn btn-success btn-lg">Save</button>
+  </div>		      
+
+	<br/>
+	<br/>
+	<br/>
+</form>
+
+<br><br>
+
+</div>
+</div>
+
+{% endblock %}
+

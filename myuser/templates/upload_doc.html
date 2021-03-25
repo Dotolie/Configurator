@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block contents %}
 
-<br><br><br><br>
-<h1>upload file</h1>
-<br>
+
 <div class ="container">
 <div class = "col-12" >
-
+	<br><br><br><br>
+	<h1>Upload file</h1>
+	<br>
       <form enctype="multipart/form-data" action="" method="post"> <!-- Do not forget to add: enctype="multipart/form-data" -->
       {% csrf_token %}
       {% if filename == None %}
@@ -21,6 +21,7 @@
           <input type='hidden' id='update' name='update' value='1'>
           <button type="submit" class="btn btn-primary">Update</button>
       {% endif %}  
+      </from>
 </div>
 </div>
 

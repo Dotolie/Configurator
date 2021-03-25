@@ -12,12 +12,30 @@ import subprocess
 import time
 import datetime
 import threading
-import os.path  
+import os.path
+import mimetypes
+import os
+
+g_model = "it"
 
 # Create your views here.
+path_envlist = "/mnt/tmp/env_list.txt"
+path_iotcap = "/tmp/iot-cap"
+path_iotput = "/tmp/iot-put"
+path_configs = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/"
+path_sconfig2 = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine2.ini"
+path_sconfig = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
+path_aconfig = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/adc.ini"
+path_device = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/device.ini"
 
-path ="/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
-#path = './myuser/config_ssengine.ini'
+
+#path ="/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
+#path = '/home/iot-box/config_ssengine.ini'
+#path_sconfig2 = "/home/iot-box/config_ssengine2.ini"
+#path_sconfig = "/home/iot-box/config_ssengine.ini"
+#path_aconfig = "/home/iot-box/adc.ini"
+#path_device = "/home/iot-box/device.ini"
+
 
 def thflash():
     run = subprocess.check_output(["chmod", "+x", "media/a64.sh"])
@@ -45,6 +63,9 @@ def upload_doc(request):
         if request.method == 'POST':
             form = DocumentForm(request.POST, request.FILES)  # Do not forget to add: request.FILES
             update = request.POST.get('update', None)
+
+            print( "update=", update)
+            print("valid=", form.is_valid())
             if update == None:
                 if form.is_valid():
                     newdoc = Document(docfile=request.FILES['docfile'])
@@ -66,7 +87,7 @@ def ConfigRead():
     data = {}
     
     config_parser = ConfigParser()
-    res = config_parser.read(path)
+    res = config_parser.read(path_sconfig)
 
     if res:
         ftpaddress = config_parser.get('COMMON', 'FTPADDRESS', fallback='10.166.101.49')
@@ -402,6 +423,112 @@ def ConfigRead():
     return data
 
 
+def AdcRead():
+    data = {}
+    
+    config_parser = ConfigParser()
+    res = config_parser.read(path_aconfig)
+
+    if res:
+        samplerate = config_parser.get('COMMON', 'samplerate', fallback=20282)
+        cutoff = config_parser.get('COMMON', 'cutoff', fallback=10141)
+        usefilter = config_parser.get('COMMON', 'use filter', fallback=0)
+        window = config_parser.get('COMMON', 'window', fallback=3)
+        taps = config_parser.get('COMMON', 'taps', fallback=16)
+
+        ch0 = config_parser.get('CHANNEL', 'ch0', fallback=1)
+        ch1 = config_parser.get('CHANNEL', 'ch1', fallback=1)
+        ch2 = config_parser.get('CHANNEL', 'ch2', fallback=1)
+        ch3 = config_parser.get('CHANNEL', 'ch3', fallback=1)
+
+        ch4 = config_parser.get('CHANNEL', 'ch4', fallback=1)
+        ch5 = config_parser.get('CHANNEL', 'ch5', fallback=1)
+        ch6 = config_parser.get('CHANNEL', 'ch6', fallback=1)
+        ch7 = config_parser.get('CHANNEL', 'ch7', fallback=1)
+        ch8 = config_parser.get('CHANNEL', 'ch8', fallback=1)
+        ch9 = config_parser.get('CHANNEL', 'ch9', fallback=1)
+        ch10 = config_parser.get('CHANNEL', 'ch10', fallback=1)
+        ch11 = config_parser.get('CHANNEL', 'ch11', fallback=1)
+        ch12 = config_parser.get('CHANNEL', 'ch12', fallback=1)
+        ch13 = config_parser.get('CHANNEL', 'ch13', fallback=1)
+        ch14 = config_parser.get('CHANNEL', 'ch14', fallback=1)
+        ch15 = config_parser.get('CHANNEL', 'ch15', fallback=1)
+
+        voltage = config_parser.get('VOLTAGECHANNEL', 'ch0', fallback=1)
+        
+    else:
+        samplerate = 20282
+        cutoff = 10141
+        usefilter = 0
+        window = 3
+        taps = 16
+
+        ch0 = 1
+        ch1 = 1
+        ch2 = 1
+        ch3 = 1
+
+        ch4 = 1
+        ch5 = 1
+        ch6 = 1
+        ch7 = 1
+        ch8 = 1
+        ch9 = 1
+        ch10 = 1
+        ch11 = 1
+        ch12 = 1
+        ch13 = 1
+        ch14 = 1
+        ch15 = 1
+
+        voltage = 1
+        
+    data['samplerate'] = samplerate
+    data['cutoff'] = cutoff
+    if usefilter=='1':
+        data['usefilter'] = usefilter
+    data['window'] = window
+    data['taps'] = taps
+
+    if ch0=='1':
+        data['ch0'] = ch0
+    if ch1=='1':
+        data['ch1'] = ch1
+    if ch2=='1':
+        data['ch2'] = ch2
+    if ch3=='1':
+        data['ch3'] = ch3
+
+    if ch4=='1':
+        data['ch4'] = ch4
+    if ch5=='1':
+        data['ch5'] = ch5
+    if ch6=='1':        
+        data['ch6'] = ch6
+    if ch7=='1':        
+        data['ch7'] = ch7
+    if ch8=='1':        
+        data['ch8'] = ch8
+    if ch9=='1':
+        data['ch9'] = ch9
+    if ch10=='1':        
+        data['ch10'] = ch10
+    if ch11=='1':
+        data['ch11'] = ch11
+    if ch12=='1':
+        data['ch12'] = ch12
+    if ch13=='1':
+        data['ch13'] = ch13
+    if ch14=='1':
+        data['ch14'] = ch14
+    if ch15=='1':
+        data['ch15'] = ch15
+    if voltage=='1':
+        data['voltage'] = voltage
+        
+    return data
+
+
 def ConfigWrite(data):
     config_writer = ConfigParser()
     config_writer.optionxform = lambda option: option
@@ -514,22 +641,118 @@ def ConfigWrite(data):
             'Freq_Band_10_Center' : data['freq_band_10_center'],
             'Freq_Band_10_Range' : data['freq_band_10_range'],
         }
-#    for key in data.keys():
-#        print(key, ":", data[key])
- 
-    with open(path, 'w') as configfile:
+
+def AdcWrite(data):
+    config_writer = ConfigParser()
+    config_writer.optionxform = lambda option: option
+    config_writer['COMMON'] = {
+			'samplerate': data['samplerate'], 
+            'use filter' : data['usefilter'],
+            'cutoff' : data['cutoff'],
+            'window' : data['window'],
+            'taps' : data['taps'],
+	} 
+
+    if ( g_model != "ITB_TYPE3" ):
+        config_writer['CHANNEL'] = {
+                'CH0' : data['ch0'],
+                'CH1' : data['ch1'],
+                'CH2' : data['ch2'],
+                'CH3' : data['ch3'],
+        }
+    else:
+        config_writer['CHANNEL'] = {
+                'CH0' : data['ch0'],
+                'CH1' : data['ch1'],
+                'CH2' : data['ch2'],
+                'CH3' : data['ch3'],
+                'CH4' : data['ch4'],
+                'CH5' : data['ch5'],
+                'CH6' : data['ch6'],
+                'CH7' : data['ch7'],
+                'CH8' : data['ch8'],
+                'CH9' : data['ch9'],
+                'CH10' : data['ch10'],
+                'CH11' : data['ch11'],
+                'CH12' : data['ch12'],
+                'CH13' : data['ch13'],
+                'CH14' : data['ch14'],
+                'CH15' : data['ch15'],
+        }
+        config_writer['VOLTAGECHANNEL'] = {
+                'CH0' : data['ch0'],
+        }
+    
+    with open(path_aconfig, 'w') as configfile:
         config_writer.write(configfile)
 
 
 
 def index(request):
     response_data = {}
-
+    global g_model
+    
     if  request.user.is_authenticated:
-        response_data = ConfigRead() 
+        try:
+            f = open(path_envlist, 'r')
+            datas = f.readlines()
+            f.close()
+        except FileNotFoundError:
+            datas = "not defined"
+            
+        for data in datas:
+            if data.startswith('MVTECH'):
+                serial = data
+            else:
+                serial = "not defined"
 
+        f = open(path_device, 'r')
+        device = f.read()
+        f.close()
+        devicelist = device.split("\n")
+
+    
+        for dev in devicelist:
+            if dev.startswith('model'):
+                dev.replace(" ", "")
+                model = dev.split("=")
+                g_model = model[1].strip()
+            if dev.startswith('uid'):
+                dev.replace(" ", "")
+                uid = dev.split("=")
+            if dev.startswith('siteid'):
+                dev.replace(" ", "")
+                siteid = dev.split("=")
+            if dev.startswith('serverUri'):
+                dev.replace(" ", "")
+                server = dev.split("=")
+
+
+        try:
+            f = open(path_iotput, 'r')
+            iotputversion = f.read()
+            f.close()
+        except FileNotFoundError:
+            iotputversion = "not defined"
+        
+        try:
+            f = open(path_iotcap, 'r');
+            iotcapversion = f.read()
+            f.close()
+        except FileNotFoundError:
+            iotputversion = "not defined"
+
+            
         response_data['username'] = request.user.username
-        return render( request, 'home.html', response_data ) 
+        response_data['model'] = model[1]   
+        response_data['serial'] = serial
+        response_data['uid'] = uid[1]
+        response_data['siteid'] = siteid[1]
+        response_data['server'] = server[1]
+        response_data['iotcapver'] = iotcapversion
+        response_data['iotputver'] = iotputversion
+
+        return render( request, 'home-new.html', response_data ) 
 
     return redirect('/user/login')
 
@@ -720,4 +943,246 @@ def shutdown(request):
 
     return redirect('/user/login')
 
+
+def adcsave(request):
+    response_data = {}
+    response_data['error'] = '' 
+
+    if request.user.is_authenticated:
+        if( g_model != "ITB_TYPE3"):
+            response_data['samplerate'] = request.POST.get('samplerate', 20282)
+            if int(request.POST.get('samplerate')) > 65536:
+                response_data['error'] = "Wrong value of Sample Rate," + request.POST.get('samplerate')
+
+            response_data['cutoff'] = request.POST.get('cutoff', 10141)
+            if int(request.POST.get('cutoff')) > int(response_data['samplerate'])/2:
+                response_data['error'] = "Wrong value of Cutoff," + request.POST.get('cutoff')
+        else:
+            response_data['samplerate'] = request.POST.get('samplerate', 1000)
+            if int(request.POST.get('samplerate')) != 8000 and int(request.POST.get('samplerate')) != 4000 and int(request.POST.get('samplerate')) != 2000 and int(request.POST.get('samplerate')) != 1000:
+                response_data['error'] = "Wrong value of Sample Rate," + request.POST.get('samplerate')
+            
+            response_data['cutoff'] = request.POST.get('cutoff', 500)
+            if int(request.POST.get('cutoff')) > int(response_data['samplerate'])/2:
+                response_data['error'] = "Wrong value of Cutoff," + request.POST.get('cutoff')
+        
+        if( request.POST.get('usefilter') == 'on' ):
+            response_data['usefilter'] = 1
+        else:
+            response_data['usefilter'] = 0
+        
+
+        response_data['window'] = request.POST.get('window', 3)
+        if int(request.POST.get('window')) > 5:
+            response_data['error'] = "Wrong value of window," + request.POST.get('window')
+
+        response_data['taps'] = request.POST.get('taps', 64)
+        if int(request.POST.get('taps')) > 100:
+            response_data['error'] = "Wrong value of taps," + request.POST.get('taps')
+
+        if( request.POST.get('ch0') == 'on' ):
+            response_data['ch0'] = 1
+        else:
+            response_data['ch0'] = 0
+        if( request.POST.get('ch1') == 'on' ):
+            response_data['ch1'] = 1
+        else:
+            response_data['ch1'] = 0
+        if( request.POST.get('ch2') == 'on' ):
+            response_data['ch2'] = 1
+        else:
+            response_data['ch2'] = 0
+        if( request.POST.get('ch3') == 'on' ):
+            response_data['ch3'] = 1
+        else:
+            response_data['ch3'] = 0
+
+        if( g_model == "ITB_TYPE3"):
+            if( request.POST.get('ch4') == 'on' ):
+                response_data['ch4'] = 1
+            else:
+                response_data['ch4'] = 0        
+            if( request.POST.get('ch5') == 'on' ):
+                response_data['ch5'] = 1
+            else:
+                response_data['ch5'] = 0
+            if( request.POST.get('ch6') == 'on' ):
+                response_data['ch6'] = 1
+            else:
+                response_data['ch6'] = 0
+            if( request.POST.get('ch7') == 'on' ):
+                response_data['ch7'] = 1
+            else:
+                response_data['ch7'] = 0
+            if( request.POST.get('ch8') == 'on' ):
+                response_data['ch8'] = 1
+            else:
+                response_data['ch8'] = 0
+            if( request.POST.get('ch9') == 'on' ):
+                response_data['ch9'] = 1
+            else:
+                response_data['ch9'] = 0
+            if( request.POST.get('ch10') == 'on' ):
+                response_data['ch10'] = 1
+            else:
+                response_data['ch10'] = 0
+            if( request.POST.get('ch11') == 'on' ):
+                response_data['ch11'] = 1
+            else:
+                response_data['ch11'] = 0
+            if( request.POST.get('ch12') == 'on' ):
+                response_data['ch12'] = 1
+            else:
+                response_data['ch12'] = 0
+            if( request.POST.get('ch13') == 'on' ):
+                response_data['ch13'] = 1
+            else:
+                response_data['ch13'] = 0
+            if( request.POST.get('ch14') == 'on' ):
+                response_data['ch14'] = 1
+            else:
+                response_data['ch14'] = 0
+            if( request.POST.get('ch15') == 'on' ):
+                response_data['ch15'] = 1
+            else:
+                response_data['ch15'] = 0
+            if( request.POST.get('voltage') == 'on' ):
+                response_data['voltage'] = 1
+            else:
+                response_data['voltage'] = 0
+
+        response_data['username'] = request.user.username
+        response_data['model'] = g_model
+        if response_data['error'] != '' :
+            return render( request, 'adcconfig.html', response_data ) 
+		
+        AdcWrite(response_data)	
+        return render( request, 'saved.html', response_data)
+
+    return redirect('/user/login')
+
+
+def adcconfig(request):
+    response_data = {}
+
+    if  request.user.is_authenticated:
+        response_data = AdcRead() 
+
+        response_data['username'] = request.user.username
+        response_data['model'] = g_model
+        return render( request, 'adcconfig.html', response_data ) 
+
+    return redirect('/user/login')
+
+def ssengsave(request):
+    response_data = {}
+
+    if request.user.is_authenticated:  
+        data = request.POST.get('config', "no")
+
+        f = open(path_sconfig, 'w')
+        f.write(data)
+        f.close()
     
+    return render( request, 'saved.html', response_data)
+
+
+def ssengconfig(request):
+    f = open(path_sconfig, 'r')
+    data = f.read()
+    f.close()
+
+    response_data = {'datas': data}
+    response_data['username'] = request.user.username
+    response_data['model'] = g_model
+
+    return render( request, 'ssengconfig.html', response_data )    
+
+def ssengsave2(request):
+    response_data = {}
+
+    if request.user.is_authenticated:  
+        data = request.POST.get('config', "no")
+
+        f = open(path_sconfig2, 'w')
+        f.write(data)
+        f.close()
+    
+    return render( request, 'saved.html', response_data)
+
+
+def ssengconfig2(request):
+    try:
+        f = open(path_sconfig2, 'r')
+        data = f.read()
+        f.close()
+    except FileNotFoundError:
+        data = ""
+
+
+    response_data = {'datas': data}
+    response_data['username'] = request.user.username
+    response_data['model'] = g_model
+
+    return render( request, 'ssengconfig2.html', response_data )    
+
+def inidownload(request):
+    response_data = {}
+    fname = ""
+    if request.user.is_authenticated:
+        form = DocumentForm()
+        if request.method == 'POST':
+            form = DocumentForm(request.POST, request.FILES)  # Do not forget to add: request.FILES
+            print("valid=", form.is_valid())
+            if form.is_valid():
+                newdoc = Document(docfile=request.FILES['docfile'])
+                newdoc.save()
+                fname ="./media/" + request.FILES['docfile'].name
+                cmd = ["mv"]
+                cmd.append(fname);
+                cmd.append( path_configs )
+                print(cmd)               
+                run = subprocess.check_output(cmd)
+                
+        filenames = os.listdir(path_configs)
+        fileitems = []
+
+        for filename in filenames:
+            items = []
+            items.append(filename)
+            items.append(time.ctime(os.path.getctime( path_configs+filename )))
+            fileitems.append(items)
+        fileitems.sort()
+        
+        response_data['filetimes'] = fileitems;
+        response_data['dirname'] = path_configs;
+        response_data['model'] = g_model;        
+        return render( request, 'inidownload.html', response_data )
+        
+    return redirect('/user/login')
+
+def iniupload(request):
+    response_data = {}
+
+    data = request.POST.get('config', "no")
+   
+    return HttpResponse('ok')  
+
+
+def reboot(request):
+    response_data = {}
+
+    data = request.POST.get('config', "no")
+
+    return HttpResponse('ok')  
+
+
+def download(request, file_id):
+    file_name = path_configs + file_id
+
+    with open(file_name, 'rb') as fh:
+        response = HttpResponse(fh.read(), content_type="text/plain")
+        response['Content-Disposition'] = 'attachment;filename*=UTF-8\'\'%s' % file_id
+        return response
+    return HttpResponse('file not found')  
+

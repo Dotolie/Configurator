@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block contents %}
+
+
+
+<div class ="container">
+<div class="form-group green-border">
+	<br><br><br>
+	<h1>Ssengine2 Configuration ({{model}})</h1>  
+	<br>
+	<form method = "POST" action="{% url 'user:ssengsave2' %}">
+	  	{% csrf_token %}
+      	<textarea  class="form-control" name="config" rows="20">{{datas}}</textarea>
+      	<br/>
+		<button type="submit" class="btn btn-success btn-lg">Save</button>
+	</form>
+	
+</div>
+</div>
+
+
+<br><br><br>
+
+{% endblock %}
+
+
