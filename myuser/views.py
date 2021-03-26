@@ -745,7 +745,7 @@ def index(request):
             iotcapversion = f.read()
             f.close()
         except FileNotFoundError:
-            iotputversion = "not defined"
+            iotcapversion = "not defined"
 
         try:
             f = open(path_fpga, 'r');
