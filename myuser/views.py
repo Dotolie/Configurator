@@ -1188,7 +1188,7 @@ def thswupdate(name):
         
     cmd = ["mv"]
     cmd.append(name);
-    cmd.append( path_configs )
+    cmd.append( path_work )
     print(cmd)
     run = subprocess.check_output(cmd)
     time.sleep(2)
