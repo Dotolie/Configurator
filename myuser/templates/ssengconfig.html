@@ -6,7 +6,7 @@
 <div class ="container">
 <div class="form-group green-border">
 	<br><br><br>
-	<h1>Ssengine Configuration ({{model}})</h1>  
+	<h2>Ssengine Configuration ({{model}})</h2>  
 	<br>
 	<form method = "POST" action="{% url 'user:ssengsave' %}">
 	  	{% csrf_token %}
@@ -17,9 +17,6 @@
 	
 </div>
 </div>
-
-
-<br><br><br>
 
 {% endblock %}
 

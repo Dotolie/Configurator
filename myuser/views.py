@@ -17,34 +17,40 @@ import mimetypes
 import os
 
 g_model = "it"
+g_result = "start"
 
 # Create your views here.
 path_envlist = "/mnt/tmp/env_list.txt"
 path_iotcap = "/tmp/iot-cap"
 path_iotput = "/tmp/iot-put"
 path_fpga = "/tmp/fpga"
+path_work = "/home/odroid/IOTEdge/iotedge"
+path_device = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/device.ini"
+
+path_configurator = "/home/configurator"
 path_configs = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/"
 path_sconfig2 = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine2.ini"
 path_sconfig = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
 path_aconfig = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/adc.ini"
-path_device = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/device.ini"
 
-
-#path ="/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
-#path = '/home/iot-box/config_ssengine.ini'
+#path_configurator = "/home/iot-box/Configurator"
+#path_configs = "/home/iot-box/"
 #path_sconfig2 = "/home/iot-box/config_ssengine2.ini"
 #path_sconfig = "/home/iot-box/config_ssengine.ini"
 #path_aconfig = "/home/iot-box/adc.ini"
-#path_device = "/home/iot-box/device.ini"
 
 
 def thflash():
+    command = subprocess.check_output(["pwd"])
+    aa=  command.decode('utf-8')
+    print("thflash=", aa)
+    
     run = subprocess.check_output(["chmod", "+x", "media/a64.sh"])
     run = subprocess.check_output(["./media/a64.sh"])
 
 def flash(request):
     value = {}
-    count=request.GET.get('count', None)
+    count=request.GET.get('count', None)            
     if int(count) == 0:
         t = threading.Thread(target=thflash)
         t.start()
@@ -65,8 +71,6 @@ def upload_doc(request):
             form = DocumentForm(request.POST, request.FILES)  # Do not forget to add: request.FILES
             update = request.POST.get('update', None)
 
-            print( "update=", update)
-            print("valid=", form.is_valid())
             if update == None:
                 if form.is_valid():
                     newdoc = Document(docfile=request.FILES['docfile'])
@@ -1141,7 +1145,7 @@ def inidownload(request):
         form = DocumentForm()
         if request.method == 'POST':
             form = DocumentForm(request.POST, request.FILES)  # Do not forget to add: request.FILES
-            print("valid=", form.is_valid())
+
             if form.is_valid():
                 newdoc = Document(docfile=request.FILES['docfile'])
                 newdoc.save()
@@ -1169,13 +1173,74 @@ def inidownload(request):
         
     return redirect('/user/login')
 
-def iniupload(request):
-    response_data = {}
 
-    data = request.POST.get('config', "no")
-   
-    return HttpResponse('ok')  
+def thswupdate(name):
+    global g_result
 
+    g_result = 'docker down'
+    
+    os.chdir(path_work)
+    run = subprocess.check_output(["docker-compose", "down"])
+    time.sleep(1)
+
+    g_result = 'move file'    
+    os.chdir(path_configurator)
+        
+    cmd = ["mv"]
+    cmd.append(name);
+    cmd.append( path_configs )
+    print(cmd)
+    run = subprocess.check_output(cmd)
+    time.sleep(2)
+    
+    g_result = 'docker up'
+    time.sleep(6)
+
+    g_result = 'complete'
+    os.chdir(path_work)
+    run = subprocess.check_output(["docker-compose", "up"])
+    g_result = ''
+
+
+
+def swupload(request):
+    if request.user.is_authenticated:
+        response_data = {}
+
+        form = DocumentForm()
+        if request.method == 'POST':
+            form = DocumentForm(request.POST, request.FILES)  # Do not forget to add: request.FILES
+
+            if form.is_valid():
+                newdoc = Document(docfile=request.FILES['docfile'])
+                newdoc.save()
+
+                fname ="./media/" + request.FILES['docfile'].name
+                t = threading.Thread(target=thswupdate, args=(fname,))
+                t.start()
+                
+                return redirect('/user/swupdate')
+
+        response_data['model'] = g_model        
+        return render( request, 'swupload.html', response_data )
+        
+    return redirect('/user/login') 
+
+def swupdate(request):
+    if request.user.is_authenticated:
+        response_data = {}
+        
+        response_data['model'] = g_model        
+        return render(request, 'swupdate.html', response_data )
+        
+    return redirect('/user/login')    
+
+def swflash(request):
+    value = {}
+    count=request.GET.get('count', None)
+    value['command']= g_result
+
+    return render(request, 'flash.html', value )
 
 def reboot(request):
     response_data = {}

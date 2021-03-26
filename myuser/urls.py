@@ -21,7 +21,9 @@ urlpatterns = [
     path('ssengconfig2/', views.ssengconfig2, name='ssengconfig2' ),
     path('ssengsave2/', views.ssengsave2, name='ssengsave2' ),
     path('inidownload/', views.inidownload, name='inidownload' ),
-    path('iniupload/', views.iniupload, name='iniupload' ),
+    path('swupload/', views.swupload, name='swupload' ),
+    path('swupdate/', views.swupdate, name='swupdate' ),
+    path('swflash/', views.swflash, name='swflash' ),    
     path('reboot/', views.reboot, name='reboot' ),
     path('download/<file_id>/', views.download, name='download'),    
 

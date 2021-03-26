@@ -2,47 +2,43 @@
 {% block contents %}
 
 <div class ="container">
-
-  <br><br><br><br><br>
-  
+<div class="form-group green-border">
+  <br><br><br>
   <h2>File Upload/Download ({{model}})</h2>
-
-  <br><br>
-
-
+  <br>
 
   <table class="w3-table">
 
     <thead>
       <tr class="w3-dark-grey">
-        <th class="w3-center"><h3>Category</h3></th>
-        <th class="w3-center"><h3>File Name</h3></th>
-        <th class="w3-center"><h3>Attribute</h3></th>        
+        <th class="w3-center"><h4>Category</h4></th>
+        <th class="w3-center"><h4>File Name</h4></th>
+        <th class="w3-center"><h4>Attribute</h4></th>        
       </tr>
     </thead>
 
 	<tr>
 		<td style="vertical-align:middle">
-			<h4>Download</h4>
+			<h5>Download</h5>
 		</td>
 		<td>
 			<ul>
 			{% for file in filetimes %}
-			  <li><a href="/user/download/{{file.0}}/"><h4>{{file.0}}</h4></a></li>
+			  <li><a href="/user/download/{{file.0}}/"><h5>{{file.0}}</h5></a></li>
 			{% endfor %}
 			</ul>
 		</td>
 		<td>
 			<ul>
 			{% for time in filetimes %}
-			  <h4>{{time.1}}</h4>
+			  <h5>{{time.1}}</h5>
 			{% endfor %}
 			</ul>
 		</td>
 	</tr>
 	<tr>
 		<td style="vertical-align:middle">
-			<h4>Upload</h4>
+			<h5>Upload</h5>
 		</td>
 		<td>
     	  <form enctype="multipart/form-data" action="" method="post"> <!-- Do not forget to add: enctype="multipart/form-data" -->
@@ -52,7 +48,9 @@
      		
      	</td>	
 		<td>
-			<button type="submit" class="btn btn-secondary btn-block">UpLoad</button>
+			<div class="text-center">
+			<button type="submit" class="btn btn-success btn-lg">Send</button>
+			</div>
 			</form>
 		</td>
 	</tr>
@@ -60,7 +58,7 @@
   </table>
 
 
-
+</div>
 </div>
 {% endblock %}
 

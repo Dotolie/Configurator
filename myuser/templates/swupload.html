@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block contents %}
+
+
+<div class ="container">
+<div class = "col-12" >
+	<br><br><br><br>
+	<h2>SW Update ({{model}})</h1>
+	<br>
+      <form enctype="multipart/form-data" action="" method="post"> <!-- Do not forget to add: enctype="multipart/form-data" -->
+      {% csrf_token %}
+          <div class="form-group">
+     		<input type="file" class="form-control" name="docfile" required id="id_docfile">
+          </div>
+          <button type="submit" class="btn btn-success">UpLoad</button>
+ 
+      </from>
+</div>
+</div>
+
+{% endblock %}
