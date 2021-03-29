@@ -1185,7 +1185,13 @@ def thswupdate(name):
 
     g_result = 'move file'    
     os.chdir(path_configurator)
-        
+
+    cmd = ["chmod"]
+    cmd.append("+x")
+    cmd.append(name)
+    run = subprocess.check_output(cmd)
+    time.sleep(1)
+    
     cmd = ["mv"]
     cmd.append(name);
     cmd.append( path_work )
