@@ -685,7 +685,7 @@ def AdcWrite(data):
                 'CH15' : data['ch15'],
         }
         config_writer['VOLTAGECHANNEL'] = {
-                'CH0' : data['ch0'],
+                'CH0' : data['voltage'],
         }
     
     with open(path_aconfig, 'w') as configfile:
