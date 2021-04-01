@@ -1276,7 +1276,7 @@ def disp(request):
         config_parser = ConfigParser()
         res = config_parser.read(path_aconfig)
         ch = [0]*16
-        chn = ['ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12','ch13','ch15','ch15','ch16']
+        chn = ['ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12','ch13','ch14','ch15','ch16']
         if res:
             ch[0] = config_parser.get('CHANNEL', 'ch0', fallback=0)
             ch[1] = config_parser.get('CHANNEL', 'ch1', fallback=0)
