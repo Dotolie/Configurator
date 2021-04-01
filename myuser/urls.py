@@ -26,5 +26,6 @@ urlpatterns = [
     path('swflash/', views.swflash, name='swflash' ),    
     path('reboot/', views.reboot, name='reboot' ),
     path('download/<file_id>/', views.download, name='download'),    
+    path('disp/', views.disp, name='disp'),    
 
 ]

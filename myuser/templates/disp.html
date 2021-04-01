@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block contents %}
+
+
+
+<br><br><br>
+<h2>ADC Values ({{model}})</h2>
+<br>
+
+<style>
+	#graphdiv .dygraph-legend { background-color: gray; }
+</style>
+
+<div id="graphdiv" class="col-12 text-center" style="width:95%; height:500px;"></div>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+  
+      var g = new Dygraph(document.getElementById("graphdiv"),
+	  	`{{datas}}`,
+	    {
+		legend: 'always',
+		title: 'ADC value',
+		ylabel: 'ADC [m/sec2]',
+		rollPeriod: 1,
+		showRoller: true,
+		showRangeSelector: false,
+		rangeSelectorHeight: 30,
+		rangeSelectorPlotStrokeColor: 'yellow',
+		rangeSelectorPlotFillColor: 'lightyellow',
+		animatedZooms: true,
+		rangeSelectorPlotFillColor: 'MediumSlateBlue',
+		rangeSelectorPlotFillGradientColor: 'rgba(123, 104, 238, 0)',            
+		colorValue: 1.0,
+		fillAlpha: 0.4,
+
+        });
+      // It sucks that these things aren't objects, and we need to store state in window.
+
+    }
+);
+</script>
+
+
+
+
+{% endblock %}
+

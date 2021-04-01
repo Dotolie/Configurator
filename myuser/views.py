@@ -15,6 +15,9 @@ import threading
 import os.path
 import mimetypes
 import os
+import zmq
+import json
+
 
 g_model = "it"
 g_result = "start"
@@ -1265,3 +1268,84 @@ def download(request, file_id):
         return response
     return HttpResponse('file not found')  
 
+def disp(request):
+    if request.user.is_authenticated:
+
+        response_data = {}
+
+        config_parser = ConfigParser()
+        res = config_parser.read(path_aconfig)
+        ch = [0]*16
+        chn = ['ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12','ch13','ch15','ch15','ch16']
+        if res:
+            ch[0] = config_parser.get('CHANNEL', 'ch0', fallback=0)
+            ch[1] = config_parser.get('CHANNEL', 'ch1', fallback=0)
+            ch[2] = config_parser.get('CHANNEL', 'ch2', fallback=0)
+            ch[3] = config_parser.get('CHANNEL', 'ch3', fallback=0)
+
+            ch[4] = config_parser.get('CHANNEL', 'ch4', fallback=0)
+            ch[5] = config_parser.get('CHANNEL', 'ch5', fallback=0)
+            ch[6] = config_parser.get('CHANNEL', 'ch6', fallback=0)
+            ch[7] = config_parser.get('CHANNEL', 'ch7', fallback=0)
+            ch[8] = config_parser.get('CHANNEL', 'ch8', fallback=0)
+            ch[9] = config_parser.get('CHANNEL', 'ch9', fallback=0)
+            ch[10] = config_parser.get('CHANNEL', 'ch10', fallback=0)
+            ch[11] = config_parser.get('CHANNEL', 'ch11', fallback=0)
+            ch[12] = config_parser.get('CHANNEL', 'ch12', fallback=0)
+            ch[13] = config_parser.get('CHANNEL', 'ch13', fallback=0)
+            ch[14] = config_parser.get('CHANNEL', 'ch14', fallback=0)
+            ch[15] = config_parser.get('CHANNEL', 'ch15', fallback=0)
+
+        # Socket to talk to server
+        context = zmq.Context()
+        socket = context.socket(zmq.SUB)
+        socket.connect ("tcp://localhost:3569")
+        socket.setsockopt_string(zmq.SUBSCRIBE, '')
+
+        ptime = []
+        cname = []
+        chdic = {}
+        datasize = 0
+
+        for m in ch:
+            if int(m) == 1:
+                string = socket.recv_multipart()
+                msg = string[0].decode()
+                dic = json.loads(msg)
+                datasize = dic['reply_params']['validdatasize']
+                captime = dic['reply_params']['time']
+                chno = dic['reply_params']['ch_name']
+                data = dic['reply_params']['data']
+                chdic[chno]=data
+                cname.append(chno)
+                ptime.append(int(captime/1000))
+                
+        print(cname, ptime)
+        
+        i = 0
+        datas ='x'
+        for m in ch:
+            if int(m) == 1:
+                datas = datas + "," + chn[i]
+            i=i+1
+        datas += '\n'
+
+        i=0
+        j = 0    
+        while i < datasize:
+            line = "{0}".format(i)
+            j = 0
+            for m in ch:
+                if int(m) == 1:
+                    line += ",{0}".format(chdic[chn[j]][i])
+                j=j+1
+            line += "\n"
+            datas += (line)
+            i = i + 1
+
+        response_data['model'] = g_model
+        response_data['datas'] = datas
+        return render(request, 'disp.html', response_data )
+        
+    return redirect('/user/login')    
+    
