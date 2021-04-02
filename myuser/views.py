@@ -1275,27 +1275,39 @@ def disp(request):
 
         config_parser = ConfigParser()
         res = config_parser.read(path_aconfig)
-        ch = [0]*16
-        chn = ['ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12','ch13','ch14','ch15','ch16']
-        if res:
-            ch[0] = config_parser.get('CHANNEL', 'ch0', fallback=0)
-            ch[1] = config_parser.get('CHANNEL', 'ch1', fallback=0)
-            ch[2] = config_parser.get('CHANNEL', 'ch2', fallback=0)
-            ch[3] = config_parser.get('CHANNEL', 'ch3', fallback=0)
 
-            ch[4] = config_parser.get('CHANNEL', 'ch4', fallback=0)
-            ch[5] = config_parser.get('CHANNEL', 'ch5', fallback=0)
-            ch[6] = config_parser.get('CHANNEL', 'ch6', fallback=0)
-            ch[7] = config_parser.get('CHANNEL', 'ch7', fallback=0)
-            ch[8] = config_parser.get('CHANNEL', 'ch8', fallback=0)
-            ch[9] = config_parser.get('CHANNEL', 'ch9', fallback=0)
-            ch[10] = config_parser.get('CHANNEL', 'ch10', fallback=0)
-            ch[11] = config_parser.get('CHANNEL', 'ch11', fallback=0)
-            ch[12] = config_parser.get('CHANNEL', 'ch12', fallback=0)
-            ch[13] = config_parser.get('CHANNEL', 'ch13', fallback=0)
-            ch[14] = config_parser.get('CHANNEL', 'ch14', fallback=0)
-            ch[15] = config_parser.get('CHANNEL', 'ch15', fallback=0)
-
+        if (g_model != "ITB_TYPE3"):
+            response_data['ylabel'] = "ADC [m/s2]"
+            ch = [0]*4
+            chn = ['ch1','ch2','ch3','ch4']
+            if res:
+                ch[0] = config_parser.get('CHANNEL', 'ch0', fallback=0)
+                ch[1] = config_parser.get('CHANNEL', 'ch1', fallback=0)
+                ch[2] = config_parser.get('CHANNEL', 'ch2', fallback=0)
+                ch[3] = config_parser.get('CHANNEL', 'ch3', fallback=0)
+        else:
+            response_data['ylabel'] = "ADC [v]"
+            ch = [0]*16
+            chn = ['ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12','ch13','ch14','ch15','ch16']
+            if res:
+                ch[0] = config_parser.get('CHANNEL', 'ch0', fallback=0)
+                ch[1] = config_parser.get('CHANNEL', 'ch1', fallback=0)
+                ch[2] = config_parser.get('CHANNEL', 'ch2', fallback=0)
+                ch[3] = config_parser.get('CHANNEL', 'ch3', fallback=0)
+            
+                ch[4] = config_parser.get('CHANNEL', 'ch4', fallback=0)
+                ch[5] = config_parser.get('CHANNEL', 'ch5', fallback=0)
+                ch[6] = config_parser.get('CHANNEL', 'ch6', fallback=0)
+                ch[7] = config_parser.get('CHANNEL', 'ch7', fallback=0)
+                ch[8] = config_parser.get('CHANNEL', 'ch8', fallback=0)
+                ch[9] = config_parser.get('CHANNEL', 'ch9', fallback=0)
+                ch[10] = config_parser.get('CHANNEL', 'ch10', fallback=0)
+                ch[11] = config_parser.get('CHANNEL', 'ch11', fallback=0)
+                ch[12] = config_parser.get('CHANNEL', 'ch12', fallback=0)
+                ch[13] = config_parser.get('CHANNEL', 'ch13', fallback=0)
+                ch[14] = config_parser.get('CHANNEL', 'ch14', fallback=0)
+                ch[15] = config_parser.get('CHANNEL', 'ch15', fallback=0)
+        
         # Socket to talk to server
         context = zmq.Context()
         socket = context.socket(zmq.SUB)
