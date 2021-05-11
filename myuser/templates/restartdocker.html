@@ -1,0 +1,68 @@
+﻿
+{% extends "base.html" %}
+{% block contents %}
+
+<script src="/static/jquery.min.js"  ></script>    
+<script type-'text/javascript'>
+	var count = 0
+	var stop = 0
+	var last =""
+	var myTimer;
+	
+	function getData() {
+		$.ajax({
+			url : '/user/swflash/',
+			data : {count:count},
+			success:function(data){
+				if( data != last) {
+					$('#memo').append('<p>');
+					$('#memo').append('</p>');
+					$('#memo').append(data);
+					}
+				else {
+					$('#memo').append('.');
+					}
+				if( data.indexOf("complete") != -1 ) {
+					clearTimeout(myTimer);
+					stop = 1;
+					$('#memo').append('<p>');
+					$('#memo').append('<button type="submit" class="btn btn-primary" >OK</button>');
+					$('#memo').append('</p>');
+					}
+				if( data.indexOf("error") != -1 ) {
+					stop = 1;
+					data ="x"
+					}
+				last = data;
+				}
+			});
+		if(stop == 0 )
+		    myTimer = setTimeout("getData()",1000);
+   		count = count+1
+		}
+		
+    window.onload=function() {
+		getData();
+		}
+ 
+</script>
+
+<div class ="container">
+<div class="form-group green-border">
+<br><br><br>
+<h2>Restart docker ({{model}})</h2>
+<br>
+<div class ="container">
+	<div class = "col-12 ">
+	 <form  action="/" method="post">
+	  {% csrf_token %}
+		<h5><span style="color:yellow;" id='memo'></span></h5>
+	 </form>
+	</div>
+</div>
+
+</div>
+</div>
+
+{% endblock %}
+

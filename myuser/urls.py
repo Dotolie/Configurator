@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/', views.login, name='login'  ),
     path('logout/', views.logout, name='logout'  ),
     path('save/', views.save, name='save' ),
-    path('restart/', views.restart, name='restart' ),
+
     path('shutdown/', views.shutdown, name='shutdown' ),
     path('upload/', views.upload_doc, name='upload' ),
     path('update/', views.update, name='update' ),
@@ -22,6 +22,7 @@ urlpatterns = [
     path('download/<file_id>/', views.download, name='download'),    
     path('disp/', views.disp, name='disp'),    
 
+    path('restartdocker/', views.restartdocker, name='restartdocker' ),
     path('portsave/', views.portsave, name='portsave' ),
     path('periodconfig/', views.periodconfig, name='periodconfig' ),
     path('periodsave/', views.periodsave, name='periodsave' ),

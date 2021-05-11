@@ -943,16 +943,44 @@ def logout(request):
 
     return redirect('/')
 
+    
+def threstartdocker():
+    global g_result
 
-def restart(request):
+    g_result = 'docker down'
+    
+    os.chdir(path_work)
+    run = subprocess.check_output(["docker-compose", "down"])
+    time.sleep(6)
+
+    
+    g_result = 'docker up'
+    time.sleep(5)
+
+
+    g_result = 'complete'
+    run = subprocess.check_output(["docker-compose", "up"])
+    g_result = ''
+
+    run = subprocess.check_output('sync')
+    time.sleep(2)
+
+
+
+def restartdocker(request):
     response_data = {}
 
     if request.user.is_authenticated:
-        response_data['username'] = request.user.username
-        run = subprocess.check_output('sync')
-        return render(request, 'reboot.html', response_data)
+
+        t = threading.Thread(target=threstartdocker)
+        t.start()
         
-    return redirect('/user/login')
+        response_data['model'] = g_model
+        return render(request, 'restartdocker.html', response_data )
+
+        
+    return redirect('/user/login') 
+
 
 
 def reboot(request):
@@ -1100,95 +1128,44 @@ def download(request, file_id):
     return HttpResponse('file not found')  
 
 def disp(request):
+    response_data = {}
+
     if request.user.is_authenticated:
-
-        response_data = {}
-
         config_parser = ConfigParser()
         res = config_parser.read(path_aconfig)
 
-        if (g_model != "ITB_TYPE3"):
-            response_data['ylabel'] = "ADC [m/s2]"
-            ch = [0]*4
-            chn = ['ch1','ch2','ch3','ch4']
-            if res:
-                ch[0] = config_parser.get('CHANNEL', 'ch0', fallback=0)
-                ch[1] = config_parser.get('CHANNEL', 'ch1', fallback=0)
-                ch[2] = config_parser.get('CHANNEL', 'ch2', fallback=0)
-                ch[3] = config_parser.get('CHANNEL', 'ch3', fallback=0)
-        else:
-            response_data['ylabel'] = "ADC [v]"
-            ch = [0]*16
-            chn = ['ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12','ch13','ch14','ch15','ch16']
-            if res:
-                ch[0] = config_parser.get('CHANNEL', 'ch0', fallback=0)
-                ch[1] = config_parser.get('CHANNEL', 'ch1', fallback=0)
-                ch[2] = config_parser.get('CHANNEL', 'ch2', fallback=0)
-                ch[3] = config_parser.get('CHANNEL', 'ch3', fallback=0)
-            
-                ch[4] = config_parser.get('CHANNEL', 'ch4', fallback=0)
-                ch[5] = config_parser.get('CHANNEL', 'ch5', fallback=0)
-                ch[6] = config_parser.get('CHANNEL', 'ch6', fallback=0)
-                ch[7] = config_parser.get('CHANNEL', 'ch7', fallback=0)
-                ch[8] = config_parser.get('CHANNEL', 'ch8', fallback=0)
-                ch[9] = config_parser.get('CHANNEL', 'ch9', fallback=0)
-                ch[10] = config_parser.get('CHANNEL', 'ch10', fallback=0)
-                ch[11] = config_parser.get('CHANNEL', 'ch11', fallback=0)
-                ch[12] = config_parser.get('CHANNEL', 'ch12', fallback=0)
-                ch[13] = config_parser.get('CHANNEL', 'ch13', fallback=0)
-                ch[14] = config_parser.get('CHANNEL', 'ch14', fallback=0)
-                ch[15] = config_parser.get('CHANNEL', 'ch15', fallback=0)
+        response_data['ylabel'] = "Temp [v]"
+
         
         # Socket to talk to server
         context = zmq.Context()
         socket = context.socket(zmq.SUB)
-        socket.connect ("tcp://localhost:3569")
+        socket.connect ("tcp://localhost:6001")
         socket.setsockopt_string(zmq.SUBSCRIBE, '')
 
-        ptime = []
-        cname = []
-        chdic = {}
-        datasize = 0
+        for i in range(1,5):
+            string = socket.recv_multipart()
+            msg = string[0].decode()
+            ch = json.loads(msg)
+            
+            msg = string[1].decode()
+            dic = json.loads(msg)
 
-        for m in ch:
-            if int(m) == 1:
-                string = socket.recv_multipart()
-                msg = string[0].decode()
-                dic = json.loads(msg)
-                datasize = dic['reply_params']['validdatasize']
-                captime = dic['reply_params']['time']
-                chno = dic['reply_params']['ch_name']
-                data = dic['reply_params']['data']
-                chdic[chno]=data
-                cname.append(chno)
-                ptime.append(int(captime/1000))
-                
-        print(cname, ptime)
-        
-        i = 0
-        datas ='x'
-        for m in ch:
-            if int(m) == 1:
-                datas = datas + "," + chn[i]
-            i=i+1
-        datas += '\n'
+            datas = dic['data']
+            data0 = datas[0]
+            data1 = datas[1]
 
-        i=0
-        j = 0    
-        while i < datasize:
-            line = "{0}".format(i)
-            j = 0
-            for m in ch:
-                if int(m) == 1:
-                    line += ",{0}".format(chdic[chn[j]][i])
-                j=j+1
-            line += "\n"
-            datas += (line)
-            i = i + 1
+            deviceid = dic['deviceid']
+            meastime = dic['meas_time']
+
+            s = datetime.datetime.fromtimestamp(meastime/1000)
+            
+            print(ch, data0, data1, deviceid, s)
+
 
         response_data['model'] = g_model
-        response_data['datas'] = datas
-        return render(request, 'disp.html', response_data )
+        
+        return render(request, 'dispview.html', response_data )
         
     return redirect('/user/login')    
 
@@ -1401,16 +1378,48 @@ def devedit(request, question_id):
         device = MyDevice.objects.get(id=question_id);
 
         if request.method == 'GET' :
+            print("quit=", question_id)
             return render(request, 'devedit.html', {'device':device})
         else:
-            mPort = request.POST.get('mainPort', "0")
-            sPort = request.POST.get('subPort', "0")
+            mPort = request.POST.get('mainPort', '0')
+            sPort = request.POST.get('subPort', '0')
             devName = request.POST.get('deviceName', "none")
-            devBus = request.POST.get('deviceBus', "0")
-            devSpeed = request.POST.get('deviceSpeed', "0")
+            devBus = request.POST.get('deviceBus', '0')
+            devSpeed = request.POST.get('deviceSpeed', '0')
 
+            if int(mPort) < 1 or int(mPort) > 16:
+                response_data['error'] = 'Over range of Main Port='+ mPort
+                response_data['device']=device
+                return render(request, 'devedit.html', response_data)
+                
+            if int(sPort) < 0 or int(sPort) > 8:
+                response_data['error'] = 'Over range of Sub Port='+ sPort
+                response_data['device']=device
+                return render(request, 'devedit.html', response_data)
+
+            if devName != 'IFBOARD' and devName != 'SPS30' and devName != 'SHT3x' and devName != 'LK15C1':
+                response_data['error'] = 'Does not support device='+ devName
+                response_data['device']=device
+                return render(request, 'devedit.html', response_data)
+
+            if int(devBus) < 0 or int(devBus) > 2:
+                response_data['error'] = 'Over range of Bus='+ devBus
+                response_data['device']=device
+                return render(request, 'devedit.html', response_data)
+
+            if int(devSpeed) < 1 or int(devSpeed) > 7:
+                response_data['error'] = 'Over range of Speed='+ devSpeed
+                response_data['device']=device
+                return render(request, 'devedit.html', response_data)
+                
             dup = MyDevice.objects.filter(mainPort=mPort, subPort=sPort)
             if not dup:
+                if device.subPort == 0:
+                    dup2 = MyDevice.objects.filter(mainPort=device.mainPort)
+                    for dev in dup2:
+                        dev.mainPort = mPort
+                        dev.save()
+
                 device.mainPort = mPort
                 device.subPort = sPort;
                 device.deviceName = devName
@@ -1418,7 +1427,7 @@ def devedit(request, question_id):
                 device.deviceSpeed = devSpeed
 
                 device.save()
-            
+                    
                 return redirect("/user/devlist2")
             else:
                 response_data['error'] = "Duplicate port : "+str(mPort) +"-" + str(sPort) + " " + devName

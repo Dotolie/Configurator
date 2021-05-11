@@ -8,8 +8,8 @@
 	    var prog = document.getElementById('prog')
 	    prog.value=temp
 	    if (temp>=100) {
-	    	document.getElementById('memo').innerHTML='Reboot'
-	    	window.location.href='/user/shutdown'
+	    	document.getElementById('memo').innerHTML='Restart Docker'
+	    	window.location.href='/user/restartdocker'
 	    }
 	    else {
 	    	document.getElementById('memo').innerHTML='Wait a moment'
