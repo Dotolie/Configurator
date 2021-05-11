@@ -8,6 +8,13 @@ from .models import Document
 from django.template import loader, RequestContext
 from django.template import Context, Template
 
+# ------ ywkim
+from django.views.generic import TemplateView
+from django.views.generic import ListView
+from .models import MyDevice
+from .forms import deviceForm
+# ------ 
+
 import subprocess 
 import time
 import datetime
@@ -27,20 +34,23 @@ path_envlist = "/mnt/tmp/env_list.txt"
 path_iotcap = "/tmp/iot-cap"
 path_iotput = "/tmp/iot-put"
 path_fpga = "/tmp/fpga"
-path_work = "/home/odroid/IOTEdge/iotedge"
-path_device = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/device.ini"
+path_work = "/home/iot-box/app"
+path_device = "/home/iot-box/app/Configs/device.ini"
 
-path_configurator = "/home/configurator"
-path_configs = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/"
-path_sconfig2 = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine2.ini"
-path_sconfig = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
-path_aconfig = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/adc.ini"
+#path_configurator = "/home/configurator"
+#path_configs = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/"
+#path_sconfig2 = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine2.ini"
+#path_sconfig = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/config_ssengine.ini"
+#path_aconfig = "/home/odroid/IOTEdge/iotedge/Configs/ssengine/adc.ini"
 
-#path_configurator = "/home/iot-box/Configurator"
-#path_configs = "/home/iot-box/"
-#path_sconfig2 = "/home/iot-box/config_ssengine2.ini"
-#path_sconfig = "/home/iot-box/config_ssengine.ini"
-#path_aconfig = "/home/iot-box/adc.ini"
+path_configurator = "/home/iot-box/Configurator"
+path_configs = "/home/iot-box/app/Configs/"
+path_tconfig = "/home/iot-box/app/Configs/period.ini"
+path_sconfig = "/home/iot-box/app/Configs/device.ini"
+path_aconfig = "/home/iot-box/app/Configs/config.ini"
+
+
+path_pconfig = "/home/iot-box/app/Configs/config.ini"
 
 
 def thflash():
@@ -934,14 +944,24 @@ def logout(request):
     return redirect('/')
 
 
-
 def restart(request):
     response_data = {}
 
     if request.user.is_authenticated:
         response_data['username'] = request.user.username
         run = subprocess.check_output('sync')
-        return render(request, 'restart.html', response_data)
+        return render(request, 'reboot.html', response_data)
+        
+    return redirect('/user/login')
+
+
+def reboot(request):
+    response_data = {}
+
+    if request.user.is_authenticated:
+        response_data['username'] = request.user.username
+        run = subprocess.check_output('sync')
+        return render(request, 'reboot.html', response_data)
         
     return redirect('/user/login')
 
@@ -958,188 +978,6 @@ def shutdown(request):
 
     return redirect('/user/login')
 
-
-def adcsave(request):
-    response_data = {}
-    response_data['error'] = '' 
-
-    if request.user.is_authenticated:
-        if( g_model != "ITB_TYPE3"):
-            response_data['samplerate'] = request.POST.get('samplerate', 20282)
-            if int(request.POST.get('samplerate')) > 65536:
-                response_data['error'] = "Wrong value of Sample Rate," + request.POST.get('samplerate')
-
-            response_data['cutoff'] = request.POST.get('cutoff', 10141)
-            if int(request.POST.get('cutoff')) > int(response_data['samplerate'])/2:
-                response_data['error'] = "Wrong value of Cutoff," + request.POST.get('cutoff')
-        else:
-            response_data['samplerate'] = request.POST.get('samplerate', 1000)
-            if int(request.POST.get('samplerate')) != 8000 and int(request.POST.get('samplerate')) != 4000 and int(request.POST.get('samplerate')) != 2000 and int(request.POST.get('samplerate')) != 1000:
-                response_data['error'] = "Wrong value of Sample Rate," + request.POST.get('samplerate')
-            
-            response_data['cutoff'] = request.POST.get('cutoff', 500)
-            if int(request.POST.get('cutoff')) > int(response_data['samplerate'])/2:
-                response_data['error'] = "Wrong value of Cutoff," + request.POST.get('cutoff')
-        
-        if( request.POST.get('usefilter') == 'on' ):
-            response_data['usefilter'] = 1
-        else:
-            response_data['usefilter'] = 0
-        
-
-        response_data['window'] = request.POST.get('window', 3)
-        if int(request.POST.get('window')) > 5:
-            response_data['error'] = "Wrong value of window," + request.POST.get('window')
-
-        response_data['taps'] = request.POST.get('taps', 64)
-        if int(request.POST.get('taps')) > 100:
-            response_data['error'] = "Wrong value of taps," + request.POST.get('taps')
-
-        if( request.POST.get('ch0') == 'on' ):
-            response_data['ch0'] = 1
-        else:
-            response_data['ch0'] = 0
-        if( request.POST.get('ch1') == 'on' ):
-            response_data['ch1'] = 1
-        else:
-            response_data['ch1'] = 0
-        if( request.POST.get('ch2') == 'on' ):
-            response_data['ch2'] = 1
-        else:
-            response_data['ch2'] = 0
-        if( request.POST.get('ch3') == 'on' ):
-            response_data['ch3'] = 1
-        else:
-            response_data['ch3'] = 0
-
-        if( g_model == "ITB_TYPE3"):
-            if( request.POST.get('ch4') == 'on' ):
-                response_data['ch4'] = 1
-            else:
-                response_data['ch4'] = 0        
-            if( request.POST.get('ch5') == 'on' ):
-                response_data['ch5'] = 1
-            else:
-                response_data['ch5'] = 0
-            if( request.POST.get('ch6') == 'on' ):
-                response_data['ch6'] = 1
-            else:
-                response_data['ch6'] = 0
-            if( request.POST.get('ch7') == 'on' ):
-                response_data['ch7'] = 1
-            else:
-                response_data['ch7'] = 0
-            if( request.POST.get('ch8') == 'on' ):
-                response_data['ch8'] = 1
-            else:
-                response_data['ch8'] = 0
-            if( request.POST.get('ch9') == 'on' ):
-                response_data['ch9'] = 1
-            else:
-                response_data['ch9'] = 0
-            if( request.POST.get('ch10') == 'on' ):
-                response_data['ch10'] = 1
-            else:
-                response_data['ch10'] = 0
-            if( request.POST.get('ch11') == 'on' ):
-                response_data['ch11'] = 1
-            else:
-                response_data['ch11'] = 0
-            if( request.POST.get('ch12') == 'on' ):
-                response_data['ch12'] = 1
-            else:
-                response_data['ch12'] = 0
-            if( request.POST.get('ch13') == 'on' ):
-                response_data['ch13'] = 1
-            else:
-                response_data['ch13'] = 0
-            if( request.POST.get('ch14') == 'on' ):
-                response_data['ch14'] = 1
-            else:
-                response_data['ch14'] = 0
-            if( request.POST.get('ch15') == 'on' ):
-                response_data['ch15'] = 1
-            else:
-                response_data['ch15'] = 0
-            if( request.POST.get('voltage') == 'on' ):
-                response_data['voltage'] = 1
-            else:
-                response_data['voltage'] = 0
-
-        response_data['username'] = request.user.username
-        response_data['model'] = g_model
-        if response_data['error'] != '' :
-            return render( request, 'adcconfig.html', response_data ) 
-		
-        AdcWrite(response_data)	
-        return render( request, 'saved.html', response_data)
-
-    return redirect('/user/login')
-
-
-def adcconfig(request):
-    response_data = {}
-
-    if  request.user.is_authenticated:
-        response_data = AdcRead() 
-
-        response_data['username'] = request.user.username
-        response_data['model'] = g_model
-        return render( request, 'adcconfig.html', response_data ) 
-
-    return redirect('/user/login')
-
-def ssengsave(request):
-    response_data = {}
-
-    if request.user.is_authenticated:  
-        data = request.POST.get('config', "no")
-
-        f = open(path_sconfig, 'w')
-        f.write(data)
-        f.close()
-    
-    return render( request, 'saved.html', response_data)
-
-
-def ssengconfig(request):
-    f = open(path_sconfig, 'r')
-    data = f.read()
-    f.close()
-
-    response_data = {'datas': data}
-    response_data['username'] = request.user.username
-    response_data['model'] = g_model
-
-    return render( request, 'ssengconfig.html', response_data )    
-
-def ssengsave2(request):
-    response_data = {}
-
-    if request.user.is_authenticated:  
-        data = request.POST.get('config', "no")
-
-        f = open(path_sconfig2, 'w')
-        f.write(data)
-        f.close()
-    
-    return render( request, 'saved.html', response_data)
-
-
-def ssengconfig2(request):
-    try:
-        f = open(path_sconfig2, 'r')
-        data = f.read()
-        f.close()
-    except FileNotFoundError:
-        data = ""
-
-
-    response_data = {'datas': data}
-    response_data['username'] = request.user.username
-    response_data['model'] = g_model
-
-    return render( request, 'ssengconfig2.html', response_data )    
 
 def inidownload(request):
     response_data = {}
@@ -1251,13 +1089,6 @@ def swflash(request):
 
     return render(request, 'flash.html', value )
 
-def reboot(request):
-    response_data = {}
-
-    data = request.POST.get('config', "no")
-
-    return HttpResponse('ok')  
-
 
 def download(request, file_id):
     file_name = path_configs + file_id
@@ -1360,4 +1191,247 @@ def disp(request):
         return render(request, 'disp.html', response_data )
         
     return redirect('/user/login')    
+
+def portsave():
+    data = {}
+    mainCh = ["CH1", "CH2", "CH3", "CH4", "CH5", "CH6", "CH7", "CH8", "CH9", "CH10", "CH11", "CH12", "CH13", "CH14", "CH15", "CH16"]
+    subCh = ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8"] 
+
+
+    devices = MyDevice.objects.all()
+    devices = MyDevice.objects.order_by('mainPort', 'subPort')
+
+    f=open(path_pconfig, 'w')
+
+    data = ";\r\n"
+    data += "; Generated config.ini file for IOT-DIGITAL\r\n"
+    data += "; device : IFBOARD, SHT3x, SPS30, LK15C1\r\n"
+    data += "; bus : 0-i2c, 1-rs485, 2-rs232\r\n"
+    data += "; main   speed : 1=4800,2=9600,3=9600,4=19200,5=38400,6=57600,7=115200 baud\r\n"
+    data += "; if(232)speed : 1=4800,2=9600,3=14400,4=19200,5=38400,6=57600,7=115200 baud\r\n"
+    data += "; if(i2c)speed : 1=10,2=40,3=100,4=200,5=400,6=800,7=1000 KHz\r\n"
+    data += ";\r\n"
+    data += "; ex)\r\n"
+    data += "; [CH1]\r\n"
+    data += "; device = IFBOARD\r\n"
+    data += "; speed = 7\r\n"
+    data += "; bus = 2\r\n"
+    data += ";\r\n"
+    data += "; ch1_device = SHT3x\r\n"
+    data += "; ch1_speed = 2\r\n"
+    data += "; ch1_bus = 0\r\n"
+    data += ";\r\n"
+    f.write(data)
     
+    for dev in devices:
+        print(dev.mainPort, dev.subPort, dev.deviceName,)
+    
+        if dev.subPort == 0:
+            data = "[" + mainCh[dev.mainPort-1] + "]\r\n"
+            data += "device = " + dev.deviceName + "\r\n"
+            data += "bus = " + str(dev.deviceBus) + "\r\n"
+            data += "speed = " + str(dev.deviceSpeed) + "\r\n"
+            data += "\r\n"
+        else:
+            data = subCh[dev.subPort-1]+'_device = ' + dev.deviceName  + "\r\n"
+            data += subCh[dev.subPort-1]+'_bus = ' + str(dev.deviceBus) + "\r\n"
+            data += subCh[dev.subPort-1]+'_speed = ' + str(dev.deviceSpeed) + "\r\n"
+            data += "\r\n"
+       
+       
+        f.write(data)
+
+    f.close()
+
+
+    return data
+
+
+def periodconfig(request):
+    f = open(path_tconfig, 'r')
+    data = f.read()
+    f.close()
+
+    response_data = {'datas': data}
+    response_data['username'] = request.user.username
+    response_data['model'] = g_model
+
+    return render( request, 'periodconfig.html', response_data )    
+
+def periodsave(request):
+    response_data = {}
+
+    if request.user.is_authenticated:  
+        data = request.POST.get('config', "no")
+
+        f = open(path_tconfig, 'w')
+        f.write(data)
+        f.close()
+    
+    return render( request, 'saved.html', response_data)
+
+
+def PortRead():
+    data = {}
+    mainCh = ["CH1", "CH2", "CH3", "CH4", "CH5", "CH6", "CH7", "CH8", "CH9", "CH10", "CH11", "CH12", "CH13", "CH14", "CH15", "CH16"]
+    subCh = ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8"] 
+
+    mCh = 0;
+    sCh = 0;
+    
+    mDevice = ""
+    mBus = 2
+    mSpeed = 7
+
+    sDevice = ""
+    sBus = 0
+    sSpeed = 2
+    
+    config_parser = ConfigParser()
+    res = config_parser.read(path_pconfig)
+      
+    if res:
+        for mPort in mainCh:
+            mDevice = config_parser.get(mPort, 'device', fallback="none")
+            mBus = config_parser.get(mPort, 'bus', fallback=2)
+            mSpeed = config_parser.get(mPort, 'speed', fallback=7)
+            
+            if mDevice=='IFBOARD':
+                mCh = mainCh.index(mPort)+1
+                sCh = 0
+
+                device = MyDevice(mainPort=mCh, subPort=sCh, deviceName=mDevice, deviceBus=mBus, deviceSpeed=mSpeed )
+                device.save()
+
+                for sPort in subCh:
+                    sCh = subCh.index(sPort)+1
+                    sDevice = config_parser.get(mPort, sPort+'_device', fallback="none")
+                    sBus = config_parser.get(mPort, sPort+'_bus', fallback=0)
+                    sSpeed = config_parser.get(mPort, sPort+'_speed', fallback=2)
+
+                    if sDevice != 'none':
+                        device = MyDevice(mainPort=mCh, subPort=sCh, deviceName=sDevice, deviceBus=sBus, deviceSpeed=sSpeed )
+                        device.save()
+                        
+            elif mDevice != 'none':
+                mCh = mainCh.index(mPort)+1
+                sCh = 0
+                
+                device = MyDevice(mainPort=mCh, subPort=sCh, deviceName=mDevice, deviceBus=mBus, deviceSpeed=mSpeed )
+                device.save()
+                
+    
+    return data
+
+class MyDeviceList(ListView):
+    model = MyDevice
+    template_name = 'devices.html'
+    context_object_name = 'my_devices'
+    
+        
+def addDevice(request):
+    response_data = {}
+
+    if request.user.is_authenticated:
+        mPort = request.POST.get('mainPort', "0")
+        sPort = request.POST.get('subPort', "0")
+        devName = request.POST.get('deviceName', "none")
+        devBus = request.POST.get('deviceBus', "0")
+        devSpeed = request.POST.get('deviceSpeed', "0")
+
+        dup = MyDevice.objects.filter(mainPort=mPort, subPort=sPort)
+        if not dup:
+            print("add new", mPort, sPort, devName, devBus, devSpeed)
+            device = MyDevice(mainPort=mPort, subPort=sPort, deviceName=devName, deviceSpeed=devSpeed, deviceBus=devBus)
+            device.save()
+        else:
+            print("duplicate", mPort, sPort, devName, devBus, devSpeed)
+            response_data['error'] = 'Duplicate device: '+str(mPort) + '-' + str(sPort) + ' ' + devName
+
+        devices = MyDevice.objects.all()        
+        devices = MyDevice.objects.order_by('mainPort', 'subPort')
+        
+        response_data['object_list'] = devices 
+        return render(request, 'devices.html', response_data)
+
+    return redirect('/user/login')
+
+def devlist(request):
+    response_data = {}
+    
+    if request.user.is_authenticated:
+        devices = MyDevice.objects.all()
+        devices.delete()
+        data = PortRead() 
+        
+        devices = MyDevice.objects.order_by('mainPort', 'subPort')
+
+        response_data['object_list'] = devices
+        return render(request, 'devices.html', response_data)
+        
+    return redirect('/user/login')
+
+def devlist2(request):
+    response_data = {}
+    
+    if request.user.is_authenticated:
+        devices = MyDevice.objects.all()
+        
+        devices = MyDevice.objects.order_by('mainPort', 'subPort')
+
+        response_data['object_list'] = devices 
+        return render(request, 'devices.html', response_data)
+        
+    return redirect('/user/login')
+
+def devdelete(request, question_id):
+    if request.user.is_authenticated:
+        device = MyDevice.objects.get(id=question_id);
+
+        device.delete()
+
+        return redirect("/user/devlist2");
+    
+    return redirect('/user/login')
+
+def devedit(request, question_id):
+    response_data={}
+    
+    if request.user.is_authenticated:
+        device = MyDevice.objects.get(id=question_id);
+
+        if request.method == 'GET' :
+            return render(request, 'devedit.html', {'device':device})
+        else:
+            mPort = request.POST.get('mainPort', "0")
+            sPort = request.POST.get('subPort', "0")
+            devName = request.POST.get('deviceName', "none")
+            devBus = request.POST.get('deviceBus', "0")
+            devSpeed = request.POST.get('deviceSpeed', "0")
+
+            dup = MyDevice.objects.filter(mainPort=mPort, subPort=sPort)
+            if not dup:
+                device.mainPort = mPort
+                device.subPort = sPort;
+                device.deviceName = devName
+                device.deviceBus = devBus
+                device.deviceSpeed = devSpeed
+
+                device.save()
+            
+                return redirect("/user/devlist2")
+            else:
+                response_data['error'] = "Duplicate port : "+str(mPort) +"-" + str(sPort) + " " + devName
+                response_data['device']=device
+                
+                return render(request, 'devedit.html', response_data)
+    
+    return redirect('/user/login')
+
+def savelist(request):
+    if request.user.is_authenticated:
+        portsave()
+        return render( request, 'saved.html')
+
+    return redirect('/user/login')
+

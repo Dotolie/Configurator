@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block contents %}
+
+
+<br><br><br>
+<h2>&nbsp;&nbsp; Port Edit</h2>
+
+<br>
+
+<span style="color:yellow;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{ error }}</strong> </span>
+
+<form method = "POST" action="{% url 'user:devedit' device.id%}" >
+	{% csrf_token %}
+
+
+	<table class="table" style="width:95%;">
+	  <thead>
+	  	<tr class="thead-dark" align="center">
+	      <th style="vertical-align:middle; width:">Title</th>
+	      <th style="vertical-align:middle; width:">Content</th>
+	      <th style="vertical-align:middle; width:">Description</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+			<tr>
+				<td align="center">
+					Main Port
+				</td>	
+				<td>
+				    <input type="number" class="form-control" id="mainPort" name="mainPort" value="{{device.mainPort}}">
+				</td>
+				<td>
+					Main port : 1~16<br>
+					(can use RS485 or RS232)
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					Sub Port
+				</td>	
+				<td>
+				    <input type="number" class="form-control" id="subPort" name="subPort" value="{{device.subPort}}">
+				</td>
+				<td>
+					Sub port : 1~8<br>
+					(can use I2C, RS485 or UART with IFBOARD)
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					Device
+				</td>	
+				<td>
+				    <input type="text" class="form-control" id="deviceName" name="deviceName" value="{{device.deviceName}}">
+				</td>
+				<td>
+					Interface board : <a title='bus=RS232, speed=115200'>IFBOARD</a><br>
+					Sensor : <a title='bus=I2C, speed=100KHz'>SHT3x</a>, <a title='bus=UART, speed=115200'>SPS30</a>, <a title='bus=RS485, speed=9600'>LK15C1</a>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					Bus
+				</td>	
+				<td>
+				    <input type="number" class="form-control" id="deviceBus" name="deviceBus" value="{{device.deviceBus}}">
+				</td>
+				<td>
+					Main Port : 1=RS485, 2=RS232 (2=RS232 only use @IFBOARD)<br>
+					IFBOARD Port : 0=I2C, 1=RS485, 2=UART<br>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					Speed
+				</td>	
+				<td>
+				    <input type="text" class="form-control" id="deviceSpeed" name="deviceSpeed" value="{{device.deviceSpeed}}">
+				</td>
+				<td>
+					Main Port : 1=4800, 2=9600, 3=9600, 4=19200, 4=38400, 6=57600, 7=115200<br>
+					&nbsp;&nbsp;(7=115200 only use @IFBOARD)<br>
+					Sensor (485/232) : 1=4800, 2=9600, 3=14400, 4=19200, 5=38400, 6=57600, 7=115200 <br>
+					Sensor (I2C) : 1=10, 2=40, 3=100, 4=200, 5=400, 6=800, 7=1000 KHz <br>
+				</td>
+			</tr>
+
+	  </tbody>
+	</table>
+	
+		<div class="text-center">
+		  <button type="summit" class="btn btn-success btn-lg" id="edit" >Edit</button>
+		</div> 
+</form>
+<br>
+<br>
+<br>
+<br>
+{% endblock %}
+

@@ -1,0 +1,38 @@
+﻿{% extends "base.html" %}
+{% block contents %}
+<script type-'text/javascript'>
+	var temp=0
+	function DrawProgress() {
+	    temp+=10
+
+	    var prog = document.getElementById('prog')
+	    prog.value=temp
+	    if (temp>=100) {
+	    	document.getElementById('memo').innerHTML='Reboot'
+	    	window.location.href='/user/shutdown'
+	    }
+	    else {
+	    	document.getElementById('memo').innerHTML='Wait a moment'
+	    	setTimeout("DrawProgress()",1000);
+	    }
+		    
+	}
+    window.onload=function() {
+		  DrawProgress();
+    }
+</script>
+
+<br><br><br><br><br><br>
+
+
+
+	<div class = "col-12 text-center" id='content'>
+		<progress id='prog' max="100"></progress>
+  </div>
+  <div class = "col-12 text-center">
+		<h1><span id='memo'></span></h1>
+	</div>
+
+  
+		      
+{% endblock %}

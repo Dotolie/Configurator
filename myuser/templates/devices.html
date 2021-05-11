@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% block contents %}
+
+
+<br><br><br>
+<h2>&nbsp;&nbsp; Port Configuration </h2>
+  <div class="text-right">
+	  <button type="button" class="btn btn-success btn-lg" id="new" >New</button>
+	  &nbsp;&nbsp;
+	  &nbsp;&nbsp;
+	  &nbsp;&nbsp;
+  </div>
+
+
+<span style="color:yellow;" id="layer3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{ error }}</strong> </span>
+
+<form method = "POST" action="{% url 'user:addDevice' %}" >
+	{% csrf_token %}
+
+	<table  style="width:95%;">
+			<tr id="layer" style="display:none;">
+				<td align="center" style="width:50px">
+					New
+				</td>
+				<td align="center" style="width:100px">
+			        <select name='mainPort'>
+			        	<option value=1 selected>1
+			        	<option value=2 >2
+			        	<option value=3 >3
+			        	<option value=4 >4
+			        	<option value=5 >5
+			        	<option value=6 >6
+			        	<option value=7 >7
+			        	<option value=8 >8
+			        	<option value=9 >9
+			        	<option value=10 >10
+			        	<option value=11 >11
+			        	<option value=12 >12
+			        	<option value=13 >13
+			        	<option value=14 >14
+			        	<option value=15 >15
+			        	<option value=16 >16			        	
+			        </select>
+				</td>
+				<td align="center" style="width:100px">
+			        <select name='subPort'>
+   			        	<option value=0 selected>0
+			        	<option value=1 >1
+			        	<option value=2 >2
+			        	<option value=3 >3
+			        	<option value=4 >4
+			        	<option value=5 >5
+			        	<option value=6 >6
+			        	<option value=7 >7
+			        	<option value=8 >8			        	
+			        </select>
+			    </td>
+				<td align="center" style="width:200px">
+				<!---
+			        <input type="text" style="text-align: left; width:160px" name="deviceName" value='none' id="deviceName">
+			        --->
+			        <select name='deviceName'>
+			        	<option value='IFBOARD' selected>IFBOARD
+			        	<option value='SPS30' >SPS30
+			        	<option value='SHT3x' >SHT3x
+			        	<option value='LK15C1' >LK15C1
+			        </select>
+				</td>
+				<td align="center" style="width:80px">
+			        <select name='deviceBus'>
+			        	<option value=0 >I2C
+			        	<option value=1 >RS485
+			        	<option value=2 selected>RS232/UART
+			        </select>
+			    </td>
+				<td align="center" style="width:200px">
+			        <select name='deviceSpeed'>
+			        	<option value=1 >1
+			        	<option value=2 >2
+			        	<option value=3 >3
+			        	<option value=4 >4
+			        	<option value=5 >5
+			        	<option value=6 >6
+			        	<option value=7 selected>7
+			        </select>					
+				</td>
+				<td style="width:80px">
+					<button type="submit" style="border-radius: 8px; background-color: #44f336;">&nbsp Add  &nbsp</button>
+				</td>
+				<td colspan="2">			
+				</td>		
+			</tr>
+			<tr id="layer1" style="display:none;">
+				<td colspan="8">
+					IFBOARD speed : 7=115200 only<br>
+					Sensor(485/232) : 1=4800,2=9600,3=14400,4=19200,5=38400,6=57600,7=115200 <br>
+					Sensor(I2C) : 1=10,2=40,3=100,4=200,5=400,6=800,7=1000 KHz <br>	
+				</td>
+			</tr>
+
+	</table>
+</form>
+
+  
+<form  method = "POST" action="{% url 'user:savelist' %}">
+	{% csrf_token %}
+
+	<table class="table" style="width:95%;">
+	  <thead>
+	  	<tr class="thead-dark" align="center">
+	      <th style="vertical-align:middle; width:50px">No</th>
+	      <th style="vertical-align:middle; width:100px">Main Port</th>
+	      <th style="vertical-align:middle; width:100px">Sub Port</th>
+	      <th style="vertical-align:middle; width:200px">device</th>
+	      <th style="vertical-align:middle; width:120px">bus</th>
+	      <th style="vertical-align:middle; width:200px">speed</th>
+   	      <th style="vertical-align:middle; width:80px">function</th>
+	      <th style="vertical-align:middle; width:" colspan="2">Description</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+		{% for dev in object_list %}
+			<tr>
+				<td align="center">
+			        {{forloop.counter}}
+				</td>
+
+				<td align="center">
+			        {{dev.mainPort}}
+				</td>
+				<td align="center">
+			        {{dev.subPort}}
+				</td>
+				<td align="center">
+					<a href="{% url 'user:devedit' dev.id %}">{{dev.deviceName}}</a>
+				</td>
+				<td align="center">
+			        {% if dev.deviceBus == 0 %}
+			        	I2C
+			        {% elif dev.deviceBus == 1 %}
+			        	RS485
+			        {% else  %}
+			        	{% if dev.subPort != 0 %}
+			        		UART
+			        	{% else %}
+				        	RS232
+				        {% endif %}
+			        {% endif %}
+				</td>
+				<td align="center">
+					{% if dev.subPort == 0 %}			
+						{% if dev.deviceSpeed == '1' %}
+							4800
+						{% elif dev.deviceSpeed == '2' %}
+							9600
+						{% elif dev.deviceSpeed == '3' %}
+							9600
+						{% elif dev.deviceSpeed == '4' %}
+							19200
+						{% elif dev.deviceSpeed == '5' %}
+							38400
+						{% elif dev.deviceSpeed == '6' %}
+							57600
+						{% elif dev.deviceSpeed == '7' %}
+							115200
+						{% endif %}
+				    {% else %}
+				    	{% if dev.deviceBus == 0 %}
+							{% if dev.deviceSpeed == '1' %}
+								10 KHz
+							{% elif dev.deviceSpeed == '2' %}
+								40 KHz
+							{% elif dev.deviceSpeed == '3' %}
+								100 KHz
+							{% elif dev.deviceSpeed == '4' %}
+								200 KHz
+							{% elif dev.deviceSpeed == '5' %}
+								400 KHz
+							{% elif dev.deviceSpeed == '6' %}
+								800 KHz
+							{% elif dev.deviceSpeed == '7' %}
+								1000 KHz
+							{% endif %}
+						{% else %}
+							{% if dev.deviceSpeed == '1' %}
+								4800
+							{% elif dev.deviceSpeed == '2' %}
+								9600
+							{% elif dev.deviceSpeed == '3' %}
+								14400
+							{% elif dev.deviceSpeed == '4' %}
+								19200
+							{% elif dev.deviceSpeed == '5' %}
+								38400
+							{% elif dev.deviceSpeed == '6' %}
+								57600
+							{% elif dev.deviceSpeed == '7' %}
+								115200
+							{% endif %}
+						{% endif %}
+			        {% endif %}
+
+				</td>
+				<td>
+					<button type="button"  style="border-radius: 8px; background-color: #008CBA;">
+				    	<a href="{% url 'user:devdelete' dev.id %}">Delete</a>
+					</button>
+				</td>
+				<td>
+				</td>
+			</tr>
+		{% empty %}
+			<tr>
+				<td>
+					
+				</td>
+				<td colspan='7' >
+					<h2>No available datas</h2>
+				</td>
+			</tr>
+
+		{% endfor %}
+
+	 </tbody>
+	</table>
+	<div class="text-center">
+		<button type="submit" class="btn btn-success btn-lg" id="save" >Save</button>
+	  &nbsp;&nbsp;
+
+	</div>
+	<br>
+</form>
+
+
+
+<script>
+    $("#layer").hide()                //처음에 안 보이게
+    $("#layer1").hide()                //처음에 안 보이게    
+ 
+    $("#new").click( function() {
+        $("#layer").toggle()
+        $("#layer1").toggle()
+         $("#layer3").toggle()
+    });
+</script>
+
+{% endblock %}
+

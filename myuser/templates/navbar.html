@@ -10,14 +10,14 @@
 		  CONFIG &#9660<i class="fa fa-caret-down"></i>
 		</button>
 		<div id="demoDrop" class="w3-hide w3-white w3-card">
-		  <a href="{% url 'user:adcconfig' %}" class="w3-bar-item w3-button">&nbsp;&nbsp;ADC</a>
-		  <a href="{% url 'user:ssengconfig' %}" class="w3-bar-item w3-button">&nbsp;&nbsp;SSENGINE</a>
-		  <a href="{% url 'user:ssengconfig2' %}" class="w3-bar-item w3-button">&nbsp;&nbsp;SSENGINE 2</a>		  
+		  <a href="{% url 'user:devlist' %}" class="w3-bar-item w3-button">&nbsp;&nbsp;Ports</a>
+		  <a href="{% url 'user:periodconfig' %}" class="w3-bar-item w3-button">&nbsp;&nbsp;Period</a>
 		</div>
 	</div>
 	
 	<a href="{% url 'user:inidownload' %}" class="w3-bar-item w3-button">File Up/Download</a>
-	<a href="{% url 'user:restart' %}" class="w3-bar-item w3-button">Restart</a>  
+	<a href="{% url 'user:restart' %}" class="w3-bar-item w3-button">Restart Docker</a>  
+	<a href="{% url 'user:reboot' %}" class="w3-bar-item w3-button">Reboot</a>  
 	<a href="{% url 'user:logout' %}" class="w3-bar-item w3-button">Logout</a>
   {% endif %}
 </div>

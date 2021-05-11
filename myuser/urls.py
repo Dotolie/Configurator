@@ -14,12 +14,6 @@ urlpatterns = [
     path('update/', views.update, name='update' ),
     path('flash/', views.flash, name='flash' ),
     
-    path('adcconfig/', views.adcconfig, name='adcconfig' ),
-    path('adcsave/', views.adcsave, name='adcsave' ),    
-    path('ssengconfig/', views.ssengconfig, name='ssengconfig' ),
-    path('ssengsave/', views.ssengsave, name='ssengsave' ),
-    path('ssengconfig2/', views.ssengconfig2, name='ssengconfig2' ),
-    path('ssengsave2/', views.ssengsave2, name='ssengsave2' ),
     path('inidownload/', views.inidownload, name='inidownload' ),
     path('swupload/', views.swupload, name='swupload' ),
     path('swupdate/', views.swupdate, name='swupdate' ),
@@ -27,5 +21,16 @@ urlpatterns = [
     path('reboot/', views.reboot, name='reboot' ),
     path('download/<file_id>/', views.download, name='download'),    
     path('disp/', views.disp, name='disp'),    
+
+    path('portsave/', views.portsave, name='portsave' ),
+    path('periodconfig/', views.periodconfig, name='periodconfig' ),
+    path('periodsave/', views.periodsave, name='periodsave' ),
+    path('devices/', views.MyDeviceList.as_view(), name='devices'),
+    path('devlist/', views.devlist, name='devlist'),    
+    path('devlist2/', views.devlist2, name='devlist2'),    
+    path('addDevice/', views.addDevice, name='addDevice'),
+    path('devdelete/<int:question_id>', views.devdelete, name='devdelete'),
+    path('devedit/<int:question_id>', views.devedit, name='devedit'),
+    path('savelist', views.savelist, name='savelist'),
 
 ]
