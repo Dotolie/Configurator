@@ -4,7 +4,7 @@
 
 
 <br><br><br>
-<h2>ADC Values ({{model}})</h2>
+<h2>&nbsp;&nbsp; Sensors ({{model}})</h2>
 <br>
 
 <style>
@@ -13,37 +13,60 @@
 
 <div id="graphdiv" class="col-12 text-center" style="width:95%; height:500px;"></div>
 
-
+<script src="/static/jquery.min.js"  ></script> 
 <script type="text/javascript">
-$(document).ready(function() {
+	var count = 0;
+	var data1 = [];
 
-  
-      var g = new Dygraph(document.getElementById("graphdiv"),
-	  	`{{datas}}`,
-	    {
-		legend: 'always',
-		title: 'ADC value',
-		ylabel: '{{ylabel}}',
-		rollPeriod: 1,
-		showRoller: true,
-		showRangeSelector: false,
-		rangeSelectorHeight: 30,
-		rangeSelectorPlotStrokeColor: 'yellow',
-		rangeSelectorPlotFillColor: 'lightyellow',
-		animatedZooms: true,
-		rangeSelectorPlotFillColor: 'MediumSlateBlue',
-		rangeSelectorPlotFillGradientColor: 'rgba(123, 104, 238, 0)',            
-		colorValue: 1.0,
-		fillAlpha: 0.4,
+	var g = new Dygraph(document.getElementById("graphdiv"), data1,
+              {
+                legend: 'always',
+                title: 'Temp & Humidity',
+                ylabel: '{{ylabel}}',
+				xlabel: 'Time',
+				drawPoints: true,
+                showRoller: true,
+                rollPeriod: 1,
+                showRoller: false,
+                rangeSelectorPlotStrokeColor: 'yellow',
+                rangeSelectorPlotFillColor: 'lightyellow',
+                animatedZooms: true,
+                rangeSelectorPlotFillColor: 'MediumSlateBlue',
+                rangeSelectorPlotFillGradientColor: 'rgba(123, 104, 238, 0)',   
+                colorValue: 1.0,
+                fillAlpha: 0.4,
 
-        });
-      // It sucks that these things aren't objects, and we need to store state in window.
+                labels: ['Time', 'Temp', 'Hum']
+              });
 
-    }
-);
+
+
+	function getData() {
+		$.ajax({
+			url : '/user/tempflash/',
+			data : {count:count},
+			success:function(data){
+				data = data.replace("[","")
+				data = data.replace("]\n","")				
+				var splist = data.split(',')
+				var x = new Date(splist[0]*1)
+				var y = Number(splist[1])
+				var z = Number(splist[2])
+				
+				data1.push([x,y,z])
+				g.updateOptions( {'file': data1} )
+				}
+			});
+			
+		}
+		
+	window.onload=function() {
+		setInterval(function() {
+			getData();
+      		}, 5000);
+		}
+
 </script>
-
-
 
 
 {% endblock %}

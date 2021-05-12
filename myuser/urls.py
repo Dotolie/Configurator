@@ -22,6 +22,8 @@ urlpatterns = [
     path('download/<file_id>/', views.download, name='download'),    
     path('disp/', views.disp, name='disp'),    
 
+
+    path('tempflash/', views.tempflash, name='tempflash' ),
     path('restartdocker/', views.restartdocker, name='restartdocker' ),
     path('portsave/', views.portsave, name='portsave' ),
     path('periodconfig/', views.periodconfig, name='periodconfig' ),

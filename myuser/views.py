@@ -1117,6 +1117,55 @@ def swflash(request):
 
     return render(request, 'flash.html', value )
 
+def tempflash(request):
+    if request.user.is_authenticated:
+        value = {}
+        temp = 0.0
+        hum = 0.0
+        fnd = 0
+        
+        count=request.GET.get('count', None)
+        
+        # Socket to talk to server
+        context = zmq.Context()
+        socket = context.socket(zmq.SUB)
+        socket.connect ("tcp://localhost:6001")
+        socket.setsockopt_string(zmq.SUBSCRIBE, '')
+        
+        for i in range(1,6):
+            string = socket.recv_multipart()
+            msg = string[0].decode()
+            ch = json.loads(msg)
+            
+            msg = string[1].decode()
+            dic = json.loads(msg)
+        
+            data = dic['data']
+            data0 = data[0]
+            data1 = data[1]
+
+            meastime = dic['meas_time']
+        
+            t = meastime
+
+            for key, val in data0.items():
+                if key.find('temp') != -1:
+                    temp = val
+            for key, val in data1.items():        
+                if key.find('hum') != -1:
+                    hum = val
+                    fnd = 1
+            if fnd == 1:
+                print(i, "t=", temp, "h=", hum)
+                break
+
+        
+        value['command'] = [t, temp, hum]
+        
+
+        return render(request, 'flash.html', value )
+
+    return redirect('/user/login')
 
 def download(request, file_id):
     file_name = path_configs + file_id
@@ -1134,37 +1183,10 @@ def disp(request):
         config_parser = ConfigParser()
         res = config_parser.read(path_aconfig)
 
-        response_data['ylabel'] = "Temp [v]"
-
-        
-        # Socket to talk to server
-        context = zmq.Context()
-        socket = context.socket(zmq.SUB)
-        socket.connect ("tcp://localhost:6001")
-        socket.setsockopt_string(zmq.SUBSCRIBE, '')
-
-        for i in range(1,5):
-            string = socket.recv_multipart()
-            msg = string[0].decode()
-            ch = json.loads(msg)
-            
-            msg = string[1].decode()
-            dic = json.loads(msg)
-
-            datas = dic['data']
-            data0 = datas[0]
-            data1 = datas[1]
-
-            deviceid = dic['deviceid']
-            meastime = dic['meas_time']
-
-            s = datetime.datetime.fromtimestamp(meastime/1000)
-            
-            print(ch, data0, data1, deviceid, s)
+        response_data['ylabel'] = "Temp [°C] & Hum [%RH]"
 
 
         response_data['model'] = g_model
-        
         return render(request, 'dispview.html', response_data )
         
     return redirect('/user/login')    
