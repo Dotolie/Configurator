@@ -1246,7 +1246,7 @@ def dispdust(request):
         config_parser = ConfigParser()
         res = config_parser.read(path_aconfig)
 
-        response_data['ylabel'] = "PM1.0, 2.5, 4.0, 10 [um/m3]"
+        response_data['ylabel'] = "PM1.0, 2.5, 4.0, 10 [ug/m3]"
 
 
         response_data['model'] = g_model
