@@ -1167,6 +1167,69 @@ def tempflash(request):
 
     return redirect('/user/login')
 
+
+def dustflash(request):
+    if request.user.is_authenticated:
+        value = {}
+        pm1 = 0.0
+        pm2p5 = 0.0
+        pm4 = 0.0
+        pm10 = 0.0        
+        fnd = 0
+        
+        count=request.GET.get('count', None)
+        
+        # Socket to talk to server
+        context = zmq.Context()
+        socket = context.socket(zmq.SUB)
+        socket.connect ("tcp://localhost:6001")
+        socket.setsockopt_string(zmq.SUBSCRIBE, '')
+        
+        for i in range(1,16):
+            string = socket.recv_multipart()
+            msg = string[0].decode()
+            ch = json.loads(msg)
+            
+            msg = string[1].decode()
+            dic = json.loads(msg)
+
+            meastime = dic['meas_time']
+        
+            data = dic['data']
+
+            if len(data) > 3:
+                data0 = data[0]
+                data1 = data[1]
+                data2 = data[2]
+                data3 = data[3]
+            
+                for key, val in data0.items():
+                    if key.find('pcMass-1.0') != -1:
+                        pm1 = val
+                for key, val in data1.items():        
+                    if key.find('pcMass-2.5') != -1:
+                        pm2p5 = val
+                for key, val in data2.items():
+                    if key.find('pcMass-4.0') != -1:
+                        pm4 = val
+                for key, val in data3.items():        
+                    if key.find('pcMass-10') != -1:
+                        pm10 = val
+                        fnd = 1
+                    
+            if fnd == 1:
+                print(i, "p1=", pm1, "p2.5=", pm2p5, "p4=", pm4, "p10=", pm10)
+                break
+
+        
+        value['command'] = [meastime, pm1, pm2p5, pm4, pm10]
+        
+
+        return render(request, 'flash.html', value )
+
+    return redirect('/user/login')
+
+
 def download(request, file_id):
     file_name = path_configs + file_id
 
@@ -1176,7 +1239,23 @@ def download(request, file_id):
         return response
     return HttpResponse('file not found')  
 
-def disp(request):
+def dispdust(request):
+    response_data = {}
+
+    if request.user.is_authenticated:
+        config_parser = ConfigParser()
+        res = config_parser.read(path_aconfig)
+
+        response_data['ylabel'] = "PM1.0, 2.5, 4.0, 10 [um/m3]"
+
+
+        response_data['model'] = g_model
+        return render(request, 'dispdust.html', response_data )
+        
+    return redirect('/user/login')    
+
+
+def disptemp(request):
     response_data = {}
 
     if request.user.is_authenticated:
@@ -1187,7 +1266,7 @@ def disp(request):
 
 
         response_data['model'] = g_model
-        return render(request, 'dispview.html', response_data )
+        return render(request, 'disptemp.html', response_data )
         
     return redirect('/user/login')    
 

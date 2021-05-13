@@ -4,7 +4,7 @@
 
 
 <br><br><br>
-<h2>&nbsp;&nbsp; Sensors ({{model}})</h2>
+<h2>&nbsp;&nbsp; Particulate Matter Sensor ({{model}})</h2>
 <br>
 
 <style>
@@ -21,7 +21,7 @@
 	var g = new Dygraph(document.getElementById("graphdiv"), data1,
               {
                 legend: 'always',
-                title: 'Temp & Humidity',
+                title: 'Particles',
                 ylabel: '{{ylabel}}',
 				xlabel: 'Time',
 				drawPoints: true,
@@ -36,24 +36,26 @@
                 colorValue: 1.0,
                 fillAlpha: 0.4,
 
-                labels: ['Time', 'Temp', 'Hum']
+                labels: ['Time', 'PM1.0', 'PM2.5', 'PM4.0', 'PM10']
               });
 
 
 
 	function getData() {
 		$.ajax({
-			url : '/user/tempflash/',
+			url : '/user/dustflash/',
 			data : {count:count},
 			success:function(data){
 				data = data.replace("[","")
 				data = data.replace("]\n","")				
 				var splist = data.split(',')
 				var x = new Date(splist[0]*1)
-				var y = Number(splist[1])
-				var z = Number(splist[2])
+				var p1 = Number(splist[1])
+				var p2p5 = Number(splist[2])
+				var p4 = Number(splist[3])
+				var p10 = Number(splist[4])
 				
-				data1.push([x,y,z])
+				data1.push([x,p1,p2p5,p4,p10])
 				g.updateOptions( {'file': data1} )
 				}
 			});

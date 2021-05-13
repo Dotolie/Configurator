@@ -20,9 +20,10 @@ urlpatterns = [
     path('swflash/', views.swflash, name='swflash' ),    
     path('reboot/', views.reboot, name='reboot' ),
     path('download/<file_id>/', views.download, name='download'),    
-    path('disp/', views.disp, name='disp'),    
 
-
+    path('dispdust/', views.dispdust, name='dispdust'),
+    path('dustflash/', views.dustflash, name='dustflash' ),
+    path('disptemp/', views.disptemp, name='disptemp'),
     path('tempflash/', views.tempflash, name='tempflash' ),
     path('restartdocker/', views.restartdocker, name='restartdocker' ),
     path('portsave/', views.portsave, name='portsave' ),
