@@ -1501,6 +1501,16 @@ def devedit(request, question_id):
             devBus = request.POST.get('deviceBus', '0')
             devSpeed = request.POST.get('deviceSpeed', '0')
 
+            if int(mPort) < 1 or int(mPort) > 16:
+                response_data['error'] = 'Over range of Main Port='+ mPort
+                response_data['device']=device
+                return render(request, 'devedit.html', response_data)
+                
+            if int(sPort) < 0 or int(sPort) > 8:
+                response_data['error'] = 'Over range of Sub Port='+ sPort
+                response_data['device']=device
+                return render(request, 'devedit.html', response_data)
+
             if devName != 'IFBOARD' and devName != 'SPS30' and devName != 'SHT3x' and devName != 'LK15C1':
                 response_data['error'] = 'Does not support device='+ devName
                 response_data['device']=device
@@ -1516,13 +1526,28 @@ def devedit(request, question_id):
                 response_data['device']=device
                 return render(request, 'devedit.html', response_data)
                 
-            device.deviceName = devName
-            device.deviceBus = devBus
-            device.deviceSpeed = devSpeed
+            dup = MyDevice.objects.filter(mainPort=mPort, subPort=sPort)
+            if not dup:
+                if device.subPort == 0:
+                    dup2 = MyDevice.objects.filter(mainPort=device.mainPort)
+                    for dev in dup2:
+                        dev.mainPort = mPort
+                        dev.save()
 
-            device.save()
+                device.mainPort = mPort
+                device.subPort = sPort;
+                device.deviceName = devName
+                device.deviceBus = devBus
+                device.deviceSpeed = devSpeed
+
+                device.save()
+                    
+                return redirect("/user/devlist2")
+            else:
+                response_data['error'] = "Duplicate port : "+str(mPort) +"-" + str(sPort) + " " + devName
+                response_data['device']=device
                 
-            return redirect("/user/devlist2")
+                return render(request, 'devedit.html', response_data)
     
     return redirect('/user/login')
 
