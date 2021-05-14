@@ -1350,7 +1350,7 @@ def periodsave(request):
 
 
 def PortRead():
-    data = {}
+    data = ""
     mainCh = ["CH1", "CH2", "CH3", "CH4", "CH5", "CH6", "CH7", "CH8", "CH9", "CH10", "CH11", "CH12", "CH13", "CH14", "CH15", "CH16"]
     subCh = ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8"] 
 
@@ -1365,8 +1365,12 @@ def PortRead():
     sBus = 0
     sSpeed = 2
     
-    config_parser = ConfigParser()
-    res = config_parser.read(path_pconfig)
+    config_parser = ConfigParser(strict=False)
+    try:
+        res = config_parser.read(path_pconfig)
+    except:
+        print("no section")
+        return "Error no section in config.ini";
       
     if res:
         for mPort in mainCh:
@@ -1445,6 +1449,7 @@ def devlist(request):
         devices = MyDevice.objects.order_by('mainPort', 'subPort')
 
         response_data['object_list'] = devices
+        response_data['error'] = data
         return render(request, 'devices.html', response_data)
         
     return redirect('/user/login')
@@ -1465,9 +1470,17 @@ def devlist2(request):
 def devdelete(request, question_id):
     if request.user.is_authenticated:
         device = MyDevice.objects.get(id=question_id);
+        mPort = device.mainPort
+        sPort = device.subPort
 
-        device.delete()
+        if sPort == 0:
+            dup = MyDevice.objects.filter(mainPort=mPort)
 
+            for dev in dup:
+                dev.delete()
+        else:
+            device.delete()
+            
         return redirect("/user/devlist2");
     
     return redirect('/user/login')
