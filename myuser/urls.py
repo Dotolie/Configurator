@@ -21,6 +21,10 @@ urlpatterns = [
     path('reboot/', views.reboot, name='reboot' ),
     path('download/<file_id>/', views.download, name='download'),    
 
+
+    path('tempflash2/', views.tempflash2, name='tempflash2' ),
+    path('dustflash2/', views.dustflash2, name='dustflash2' ),
+    path('disp/<int:question_id>', views.disp, name='disp'),
     path('dispdust/', views.dispdust, name='dispdust'),
     path('dustflash/', views.dustflash, name='dustflash' ),
     path('disptemp/', views.disptemp, name='disptemp'),

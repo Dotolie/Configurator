@@ -15,13 +15,12 @@
 
 <script src="/static/jquery.min.js"  ></script> 
 <script type="text/javascript">
-	var count = 0;
 	var data1 = [];
 	var dev = ""
 	var g = new Dygraph(document.getElementById("graphdiv"), data1,
               {
                 legend: 'always',
-                title: 'Temp & Humidity',
+                title: '{{dev}}{{device}}',
                 ylabel: '{{ylabel}}',
 				xlabel: 'Time',
 				drawPoints: true,
@@ -43,8 +42,8 @@
 
 	function getData() {
 		$.ajax({
-			url : '/user/tempflash/',
-			data : {device:dev},
+			url : '/user/tempflash2/',
+			data : {dev:dev},
 			success:function(data){
 				data = data.replace("[","")
 				data = data.replace("]\n","")				
@@ -61,6 +60,8 @@
 		}
 		
 	window.onload=function() {
+		dev = '{{dev}}'
+
 		setInterval(function() {
 			getData();
       		}, 5000);

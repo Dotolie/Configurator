@@ -1168,6 +1168,154 @@ def tempflash(request):
     return redirect('/user/login')
 
 
+def tempflash2(request):
+    if request.user.is_authenticated:
+        value = {}
+        temp = 0.0
+        hum = 0.0
+        fnd = 0
+        
+        dev=request.GET.get('dev', None)
+        count = MyDevice.objects.count()
+        ext = MyDevice.objects.filter(deviceName='IFBOARD').count()
+        tcount = count - ext
+        # Socket to talk to server
+        context = zmq.Context()
+        socket = context.socket(zmq.SUB)
+        socket.connect ("tcp://localhost:6001")
+        socket.setsockopt_string(zmq.SUBSCRIBE, '')
+        
+        for i in range(1,tcount):
+            string = socket.recv_multipart()
+            msg = string[0].decode()
+            ch = json.loads(msg)
+            
+            msg = string[1].decode()
+            dic = json.loads(msg)
+        
+            meastime = dic['meas_time']
+        
+            data = dic['data']
+            data0 = data[0]
+            data1 = data[1]
+
+            
+            for key, val in data0.items():
+                if key.find(dev) != -1:
+                    temp = val
+            for key, val in data1.items():        
+                if key.find(dev) != -1:
+                    hum = val
+                    fnd = 1
+            if fnd == 1:
+                print(i, dev, "t=", temp, "h=", hum)        
+                break;
+
+        value['command'] = [meastime, temp, hum]
+        
+
+        return render(request, 'flash.html', value )
+
+    return redirect('/user/login')
+
+def dustflash2(request):
+    if request.user.is_authenticated:
+        value = {}
+        pm1 = 0.0
+        pm2p5 = 0.0
+        pm4 = 0.0
+        pm10 = 0.0
+
+        nm0p5 = 0.0
+        nm1 = 0.0
+        nm2p5 = 0.0
+        nm4 = 0.0
+        nm10 = 0.0
+
+        tps = 0.0
+        
+        fnd = 0
+        
+        dev=request.GET.get('dev', None)
+        count = MyDevice.objects.count()
+        ext = MyDevice.objects.filter(deviceName='IFBOARD').count()
+        tcount = count - ext        
+        # Socket to talk to server
+        context = zmq.Context()
+        socket = context.socket(zmq.SUB)
+        socket.connect ("tcp://localhost:6001")
+        socket.setsockopt_string(zmq.SUBSCRIBE, '')
+        
+        for i in range(1,tcount):
+            string = socket.recv_multipart()
+            msg = string[0].decode()
+            ch = json.loads(msg)
+            
+            msg = string[1].decode()
+            dic = json.loads(msg)
+
+            meastime = dic['meas_time']
+        
+            data = dic['data']
+            if len(data) < 10:
+                continue
+            data0 = data[0]
+            data1 = data[1]
+            data2 = data[2]
+            data3 = data[3]
+            
+            data4 = data[4]
+            data5 = data[5]
+            data6 = data[6]
+            data7 = data[7]
+            data8 = data[8]
+            data9 = data[9]            
+            
+            for key, val in data0.items():
+                if key.find(dev) != -1:
+                    pm1 = val
+            for key, val in data1.items():        
+                if key.find(dev) != -1:
+                    pm2p5 = val
+            for key, val in data2.items():
+                if key.find(dev) != -1:
+                    pm4 = val
+            for key, val in data3.items():        
+                if key.find(dev) != -1:
+                    pm10 = val
+            for key, val in data4.items():
+                if key.find(dev) != -1:
+                    nm0p5 = val
+            for key, val in data5.items():        
+                if key.find(dev) != -1:
+                    nm1 = val
+            for key, val in data6.items():
+                if key.find(dev) != -1:
+                    nm2p5 = val
+            for key, val in data7.items():        
+                if key.find(dev) != -1:
+                    nm4 = val
+            for key, val in data8.items():        
+                if key.find(dev) != -1:
+                    nm10 = val
+            for key, val in data9.items():        
+                if key.find(dev) != -1:
+                    tps = val
+                    fnd = 1
+                    
+            if fnd == 1:
+                print(i, dev, pm1, pm2p5, pm4, pm10, nm0p5, nm1, nm2p5, nm4, nm10 ,tps)
+                break
+
+        
+        value['command'] = [meastime, pm1, pm2p5, pm4, pm10, nm0p5, nm1, nm2p5, nm4, nm10, tps]
+        
+
+        return render(request, 'flash.html', value )
+
+    return redirect('/user/login')
+    
+
 def dustflash(request):
     if request.user.is_authenticated:
         value = {}
@@ -1238,6 +1386,41 @@ def download(request, file_id):
         response['Content-Disposition'] = 'attachment;filename*=UTF-8\'\'%s' % file_id
         return response
     return HttpResponse('file not found')  
+
+
+def disp(request, question_id):
+    response_data = {}
+    id = ''
+    
+    if request.user.is_authenticated:
+        device = MyDevice.objects.get(id=question_id);
+
+        mPort = device.mainPort
+        sPort = device.subPort
+        devName = device.deviceName
+
+        if sPort == 0:
+            id = '%03d%03d%03d_' % (mPort, 0, 0)
+        else:
+            id = '%03d%03d%03d_' % (mPort, 1, sPort)
+
+        
+        if devName == 'SHT3x':
+            response_data['ylabel'] = "Temp [°C] & Hum [%RH]"
+            response_data['model'] = g_model
+            response_data['dev'] = id
+            response_data['device'] = devName
+            return render(request, 'disptemp2.html', response_data )
+
+        elif devName == 'SPS30':
+            response_data['ylabel'] = "PM1.0, 2.5, 4.0, 10 [ug/m3]"
+            response_data['model'] = g_model
+            response_data['dev'] = id
+            response_data['device'] = devName            
+            return render(request, 'dispdust2.html', response_data )
+        
+    return redirect('/user/login')
+
 
 def dispdust(request):
     response_data = {}

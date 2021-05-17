@@ -55,7 +55,7 @@
 			        	<option value=8 >8			        	
 			        </select>
 			    </td>
-				<td align="center" style="width:200px">
+				<td align="center" style="width:140px">
 				<!---
 			        <input type="text" style="text-align: left; width:160px" name="deviceName" value='none' id="deviceName">
 			        --->
@@ -73,7 +73,7 @@
 			        	<option value=2 selected>RS232/UART
 			        </select>
 			    </td>
-				<td align="center" style="width:200px">
+				<td align="center" style="width:140px">
 			        <select name='deviceSpeed'>
 			        	<option value=1 >1
 			        	<option value=2 >2
@@ -84,7 +84,7 @@
 			        	<option value=7 selected>7
 			        </select>					
 				</td>
-				<td style="width:80px">
+				<td style="width:140px">
 					<button type="submit" style="border-radius: 8px; background-color: #44f336;">&nbsp Add  &nbsp</button>
 				</td>
 				<td colspan="2">			
@@ -111,10 +111,10 @@
 	      <th style="vertical-align:middle; width:50px">No</th>
 	      <th style="vertical-align:middle; width:100px">Main Port</th>
 	      <th style="vertical-align:middle; width:100px">Sub Port</th>
-	      <th style="vertical-align:middle; width:200px">device</th>
+	      <th style="vertical-align:middle; width:140px">device</th>
 	      <th style="vertical-align:middle; width:120px">bus</th>
-	      <th style="vertical-align:middle; width:200px">speed</th>
-   	      <th style="vertical-align:middle; width:80px">function</th>
+	      <th style="vertical-align:middle; width:140px">speed</th>
+   	      <th style="vertical-align:middle; width:140px">function</th>
 	      <th style="vertical-align:middle; width:" colspan="2">Description</th>
 	    </tr>
 	  </thead>
@@ -132,7 +132,7 @@
 			        {{dev.subPort}}
 				</td>
 				<td align="center">
-					<a href="{% url 'user:devedit' dev.id %}">{{dev.deviceName}}</a>
+					<a href="{% url 'user:disp' dev.id %}">{{dev.deviceName}}</a>
 				</td>
 				<td align="center">
 			        {% if dev.deviceBus == 0 %}
@@ -202,6 +202,9 @@
 
 				</td>
 				<td>
+					<button type="button"  style="border-radius: 8px; background-color: #00BC8A;">
+				    	<a href="{% url 'user:devedit' dev.id %}">Edit</a>
+					</button>
 					<button type="button"  style="border-radius: 8px; background-color: #008CBA;">
 				    	<a href="{% url 'user:devdelete' dev.id %}">Delete</a>
 					</button>
