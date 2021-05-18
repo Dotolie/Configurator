@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block contents %}
+
+
+
+<br><br><br>
+<h2>&nbsp;&nbsp; Leak Sensor ({{model}})</h2>
+<br>
+
+<style>
+	#graphdiv .dygraph-legend { background-color: gray; }
+</style>
+
+<div id="graphdiv" class="col-12 text-center" style="width:95%; height:500px;"></div>
+
+<script src="/static/jquery.min.js"  ></script> 
+<script type="text/javascript">
+	var data1 = [];
+	var dev = ""
+	var g = new Dygraph(document.getElementById("graphdiv"), data1,
+              {
+                legend: 'always',
+                title: '{{dev}}{{device}}',
+                ylabel: '{{ylabel}}',
+				xlabel: 'Time',
+				drawPoints: true,
+                showRoller: true,
+                rollPeriod: 1,
+                valueRange: [-1, 1],
+                showRoller: false,
+                rangeSelectorPlotStrokeColor: 'yellow',
+                rangeSelectorPlotFillColor: 'lightyellow',
+                animatedZooms: true,
+                rangeSelectorPlotFillColor: 'MediumSlateBlue',
+                rangeSelectorPlotFillGradientColor: 'rgba(123, 104, 238, 0)',   
+                colorValue: 1.0,
+                fillAlpha: 0.4,
+
+                labels: ['Time', 'Leak1', 'Leak2', 'Leak3', 'Leak4']
+              });
+
+
+
+	function getData() {
+		$.ajax({
+			url : '/user/leakflash2/',
+			data : {dev:dev},
+			success:function(data){
+				data = data.replace("[","")
+				data = data.replace("]\n","")				
+				var splist = data.split(',')
+				var x = new Date(splist[0]*1)
+				var l1 = Number(splist[1])
+				var l2 = Number(splist[2])
+				var l3 = Number(splist[3])
+				var l4 = Number(splist[4])
+				var b1 = Number(splist[5])
+				var b2 = Number(splist[6])
+				var b3 = Number(splist[7])
+				var b4 = Number(splist[8])
+				
+				data1.push([x,l1,l2,l3,l4])
+				g.updateOptions( {'file': data1} )
+				}
+			});
+			
+		}
+		
+	window.onload=function() {
+		dev = '{{dev}}'
+
+		setInterval(function() {
+			getData();
+      		}, 5000);
+		}
+
+</script>
+
+
+{% endblock %}
+

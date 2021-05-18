@@ -1157,11 +1157,8 @@ def tempflash(request):
                     fnd = 1
             if fnd == 1:
                 print(i, "t=", temp, "h=", hum)
+                value['command'] = [t, temp, hum]
                 break
-
-        
-        value['command'] = [t, temp, hum]
-        
 
         return render(request, 'flash.html', value )
 
@@ -1178,7 +1175,7 @@ def tempflash2(request):
         dev=request.GET.get('dev', None)
         count = MyDevice.objects.count()
         ext = MyDevice.objects.filter(deviceName='IFBOARD').count()
-        tcount = count - ext
+        tcount = count - ext + 1
         # Socket to talk to server
         context = zmq.Context()
         socket = context.socket(zmq.SUB)
@@ -1203,20 +1200,79 @@ def tempflash2(request):
             for key, val in data0.items():
                 if key.find(dev) != -1:
                     temp = val
-            for key, val in data1.items():        
-                if key.find(dev) != -1:
-                    hum = val
+                    hum = data1.get(dev+'humid')
                     fnd = 1
             if fnd == 1:
                 print(i, dev, "t=", temp, "h=", hum)        
+                value['command'] = [meastime, temp, hum]
+                return render(request, 'flash.html', value )
                 break;
+                
 
-        value['command'] = [meastime, temp, hum]
+def leakflash2(request):
+    if request.user.is_authenticated:
+        value = {}
+        leak1=0
+        leak2=0
+        leak3=0
+        leak4=0
+        break1=0
+        break2=0
+        break3=0
+        break4=0
+
+        fnd = 0
         
+        dev=request.GET.get('dev', None)
+        count = MyDevice.objects.count()
+        ext = MyDevice.objects.filter(deviceName='IFBOARD').count()
+        tcount = count - ext + 1
+        # Socket to talk to server
+        context = zmq.Context()
+        socket = context.socket(zmq.SUB)
+        socket.connect ("tcp://localhost:6001")
+        socket.setsockopt_string(zmq.SUBSCRIBE, '')
+        
+        for i in range(1,tcount):
+            string = socket.recv_multipart()
+            msg = string[0].decode()
+            ch = json.loads(msg)
+            
+            msg = string[1].decode()
+            dic = json.loads(msg)
+        
+            meastime = dic['meas_time']
+        
+            data = dic['data']
 
-        return render(request, 'flash.html', value )
-
-    return redirect('/user/login')
+            if len(data) < 8:
+                continue            
+            data0 = data[0]
+            data1 = data[1]
+            data2 = data[2]
+            data3 = data[3]
+            data4 = data[4]
+            data5 = data[5]
+            data6 = data[6]
+            data7 = data[7]
+            
+            for key, val in data0.items():
+                if key.find(dev) != -1:
+                    leak1 = val
+                    leak2 = data1.get(dev+'Leak-ch2')
+                    leak3 = data2.get(dev+'Leak-ch3')
+                    leak4 = data3.get(dev+'Leak-ch4')
+                    break1 = data4.get(dev+'broken-ch1')
+                    break2 = data5.get(dev+'broken-ch2')
+                    break3 = data6.get(dev+'broken-ch3')
+                    break4 = data7.get(dev+'broken-ch4')                    
+                    fnd = 1
+            if fnd == 1:
+                print(i, dev, "l1=", leak1, "l2=", leak2, "l3=", leak3, "l4=", leak4, "b1=", break1, "b2=", break2, "b3=", break3, "b4=", break4)
+                value['command'] = [meastime, leak1, leak2, leak3, leak4, break1, break2, break3, break4]
+                return render(request, 'flash.html', value )
+                break;
+    return HttpResponse('ok')
 
 def dustflash2(request):
     if request.user.is_authenticated:
@@ -1239,7 +1295,7 @@ def dustflash2(request):
         dev=request.GET.get('dev', None)
         count = MyDevice.objects.count()
         ext = MyDevice.objects.filter(deviceName='IFBOARD').count()
-        tcount = count - ext        
+        tcount = count - ext + 1       
         # Socket to talk to server
         context = zmq.Context()
         socket = context.socket(zmq.SUB)
@@ -1274,46 +1330,23 @@ def dustflash2(request):
             for key, val in data0.items():
                 if key.find(dev) != -1:
                     pm1 = val
-            for key, val in data1.items():        
-                if key.find(dev) != -1:
-                    pm2p5 = val
-            for key, val in data2.items():
-                if key.find(dev) != -1:
-                    pm4 = val
-            for key, val in data3.items():        
-                if key.find(dev) != -1:
-                    pm10 = val
-            for key, val in data4.items():
-                if key.find(dev) != -1:
-                    nm0p5 = val
-            for key, val in data5.items():        
-                if key.find(dev) != -1:
-                    nm1 = val
-            for key, val in data6.items():
-                if key.find(dev) != -1:
-                    nm2p5 = val
-            for key, val in data7.items():        
-                if key.find(dev) != -1:
-                    nm4 = val
-            for key, val in data8.items():        
-                if key.find(dev) != -1:
-                    nm10 = val
-            for key, val in data9.items():        
-                if key.find(dev) != -1:
-                    tps = val
+                    pm2p5 = data1.get(dev+'pcMass-2.5')
+                    pm4 = data2.get(dev+'pcMass-4.0')
+                    pm10 = data3.get(dev+'pcMass-10.0')
+                    nm0p5 = data4.get(dev+'pcCount-0.5')
+                    nm1 = data5.get(dev+'pcCount-1.0')
+                    nm2p5 = data6.get(dev+'pcCount-2.5')
+                    nm4 = data7.get(dev+'pcCount-4.0')
+                    nm10 = data8.get(dev+'pcCount-10.0')
+                    tps = data9.get(dev+'pcSize')
                     fnd = 1
                     
             if fnd == 1:
                 print(i, dev, pm1, pm2p5, pm4, pm10, nm0p5, nm1, nm2p5, nm4, nm10 ,tps)
+                value['command'] = [meastime, pm1, pm2p5, pm4, pm10, nm0p5, nm1, nm2p5, nm4, nm10, tps]
+                return render(request, 'flash.html', value )
                 break
 
-        
-        value['command'] = [meastime, pm1, pm2p5, pm4, pm10, nm0p5, nm1, nm2p5, nm4, nm10, tps]
-        
-
-        return render(request, 'flash.html', value )
-
-    return redirect('/user/login')
     
 
 def dustflash(request):
@@ -1367,11 +1400,8 @@ def dustflash(request):
                     
             if fnd == 1:
                 print(i, "p1=", pm1, "p2.5=", pm2p5, "p4=", pm4, "p10=", pm10)
+                value['command'] = [meastime, pm1, pm2p5, pm4, pm10]
                 break
-
-        
-        value['command'] = [meastime, pm1, pm2p5, pm4, pm10]
-        
 
         return render(request, 'flash.html', value )
 
@@ -1409,16 +1439,26 @@ def disp(request, question_id):
             response_data['ylabel'] = "Temp [°C] & Hum [%RH]"
             response_data['model'] = g_model
             response_data['dev'] = id
-            response_data['device'] = devName
+            response_data['device'] = devName            
             return render(request, 'disptemp2.html', response_data )
-
         elif devName == 'SPS30':
             response_data['ylabel'] = "PM1.0, 2.5, 4.0, 10 [ug/m3]"
             response_data['model'] = g_model
             response_data['dev'] = id
             response_data['device'] = devName            
             return render(request, 'dispdust2.html', response_data )
-        
+        elif devName == 'LK15C1':
+            response_data['ylabel'] = "Leak"
+            response_data['model'] = g_model
+            response_data['dev'] = id
+            response_data['device'] = devName            
+            return render(request, 'displeak2.html', response_data )            
+        else:
+            devices = MyDevice.objects.order_by('mainPort', 'subPort')            
+            response_data['object_list'] = devices
+            response_data['error'] = devName + " has no disaplay data."            
+            return render(request, 'devices.html', response_data)
+            
     return redirect('/user/login')
 
 

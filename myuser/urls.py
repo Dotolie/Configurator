@@ -23,6 +23,7 @@ urlpatterns = [
 
 
     path('tempflash2/', views.tempflash2, name='tempflash2' ),
+    path('leakflash2/', views.leakflash2, name='leakflash2' ),
     path('dustflash2/', views.dustflash2, name='dustflash2' ),
     path('disp/<int:question_id>', views.disp, name='disp'),
     path('dispdust/', views.dispdust, name='dispdust'),
