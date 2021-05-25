@@ -6,9 +6,9 @@
 <div class ="container">
 <div class="form-group green-border">
 	<br><br><br>
-	<h2>Period Configuration ({{model}})</h2>  
+	<h2>Device Configuration ({{model}})</h2>  
 	<br>
-	<form method = "POST" action="{% url 'user:periodsave' %}">
+	<form method = "POST" action="{% url 'user:devicesave' %}">
 	  	{% csrf_token %}
       	<textarea  class="form-control" name="config" rows="15">{{datas}}</textarea>
       	<br/>

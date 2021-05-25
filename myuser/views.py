@@ -1548,8 +1548,8 @@ def portsave():
     return data
 
 
-def periodconfig(request):
-    f = open(path_tconfig, 'r')
+def deviceconfig(request):
+    f = open(path_sconfig, 'r')
     data = f.read()
     f.close()
 
@@ -1557,15 +1557,15 @@ def periodconfig(request):
     response_data['username'] = request.user.username
     response_data['model'] = g_model
 
-    return render( request, 'periodconfig.html', response_data )    
+    return render( request, 'deviceconfig.html', response_data )    
 
-def periodsave(request):
+def devicesave(request):
     response_data = {}
 
     if request.user.is_authenticated:  
         data = request.POST.get('config', "no")
 
-        f = open(path_tconfig, 'w')
+        f = open(path_sconfig, 'w')
         f.write(data)
         f.close()
     
